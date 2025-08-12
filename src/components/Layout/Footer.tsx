@@ -7,7 +7,7 @@ import {
   Twitter,
   Home,
   Info,
-  Camera,
+  Newspaper,
   Briefcase,
   Map,
   MessageCircle,
@@ -21,7 +21,7 @@ const Footer = () => {
   const navItems = [
     { name: 'Beranda', path: '/', icon: Home },
     { name: 'Tentang', path: '/about', icon: Info },
-    { name: 'Wisata', path: '/tourism', icon: Camera },
+    { name: 'Berita', path: '/news', icon: Newspaper },
     { name: 'Ekonomi', path: '/business', icon: Briefcase },
     { name: 'Peta', path: '/map', icon: Map },
     { name: 'Kontak', path: '/contact', icon: MessageCircle },
@@ -50,8 +50,8 @@ const Footer = () => {
               <span className="text-xl lg:text-2xl font-bold">Desa Cikadu</span>
             </div>
             <p className="text-gray-400 text-sm lg:text-base leading-relaxed">
-              Temukan keindahan dan budaya desa kami melalui pengalaman
-              interaktif dan koneksi komunitas yang bermakna.
+              Temukan keajaiban dan pesona budaya desa kami melalui pengalaman
+              interaktif yang menakjubkan dan koneksi komunitas yang menghangatkan hati.
             </p>
 
             <div className="flex flex-wrap gap-2 mt-4">
@@ -102,7 +102,7 @@ const Footer = () => {
                   className="h-10 w-8 lg:h-6 lg:w-6 mt-0.5 flex-shrink-0"
                 />
                 <span className="leading-relaxed">
-                  Alamat Desa, Kecamatan, Kabupaten, Provinsi
+                  Desa Cikadu, Kecamatan Pelabuhanratu, Kabupaten Sukabumi, Jawa Barat
                 </span>
               </li>
               <li className="flex items-center space-x-3 text-gray-400">
@@ -117,10 +117,10 @@ const Footer = () => {
               <li className="flex items-center space-x-3 text-gray-400">
                 <Mail className="h-4 w-4 lg:h-5 lg:w-5 text-green-400 flex-shrink-0" />
                 <a
-                  href="mailto:info@profildesa.com"
+                  href="mailto:info@desacikadu.id"
                   className="hover:text-green-400 transition-colors break-all hover:underline"
                 >
-                  info@profildesa.com
+                  info@desacikadu.id
                 </a>
               </li>
             </ul>
@@ -143,7 +143,7 @@ const Footer = () => {
             </h3>
             <div className="flex flex-wrap gap-3">
               <a
-                href="https://facebook.com/profildesa"
+                href="https://facebook.com/desacikadu"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-2 lg:p-3 bg-gray-800 rounded-lg hover:bg-blue-600 transition-all duration-200 hover:scale-105 group"
@@ -152,7 +152,7 @@ const Footer = () => {
                 <Facebook className="h-4 w-4 lg:h-5 lg:w-5 group-hover:scale-110 transition-transform" />
               </a>
               <a
-                href="https://instagram.com/profildesa"
+                href="https://instagram.com/desacikadu"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-2 lg:p-3 bg-gray-800 rounded-lg hover:bg-pink-600 transition-all duration-200 hover:scale-105 group"
@@ -161,7 +161,7 @@ const Footer = () => {
                 <Instagram className="h-4 w-4 lg:h-5 lg:w-5 group-hover:scale-110 transition-transform" />
               </a>
               <a
-                href="https://twitter.com/profildesa"
+                href="https://twitter.com/desacikadu"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-2 lg:p-3 bg-gray-800 rounded-lg hover:bg-sky-500 transition-all duration-200 hover:scale-105 group"
@@ -172,7 +172,7 @@ const Footer = () => {
             </div>
             <p className="text-xs lg:text-sm text-gray-400 mt-2">
               Tetap terhubung dengan kami melalui media sosial untuk mendapatkan
-              informasi terkini tentang kegiatan desa.
+              informasi terkini tentang kegiatan dan keajaiban desa.
             </p>
           </div>
         </div>
@@ -181,8 +181,8 @@ const Footer = () => {
         <div className="border-t border-gray-800 mt-8 lg:mt-12 pt-6 lg:pt-8">
           <div className="flex flex-col sm:flex-row items-center justify-between space-y-4 sm:space-y-0">
             <p className="text-xs lg:text-sm text-gray-400 text-center sm:text-left">
-              &copy; {new Date().getFullYear()} ProfilDesa. Dikembangkan dengan
-              ❤️ untuk kemajuan masyarakat desa.
+              &copy; {new Date().getFullYear()} Desa Cikadu. Dikembangkan dengan
+              ❤️ untuk kemajuan masyarakat desa yang luar biasa.
             </p>
             <div className="flex flex-wrap justify-center sm:justify-end gap-4 text-xs lg:text-sm">
               <button
@@ -208,8 +208,8 @@ const Footer = () => {
 
           <div className="mt-4 pt-4 border-t border-gray-800 text-center">
             <p className="text-xs text-gray-500">
-              Website ini dibuat untuk memperkenalkan potensi desa dan mendukung
-              pengembangan ekonomi lokal
+              Website ini dibuat untuk memperkenalkan potensi luar biasa desa dan mendukung
+              pengembangan ekonomi lokal yang berkelanjutan
             </p>
           </div>
         </div>

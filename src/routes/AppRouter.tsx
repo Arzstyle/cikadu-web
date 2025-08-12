@@ -5,7 +5,7 @@ import Navbar from '../components/Layout/Navbar';
 import Footer from '../components/Layout/Footer';
 import HomePage from '../pages/HomePage';
 import AboutPage from '../pages/AboutPage';
-import TourismPage from '../pages/TourismPage';
+import NewsPage from '../pages/NewsPage';
 import BusinessPage from '../pages/BusinessPage';
 import MapPage from '../pages/MapPage';
 import ContactPage from '../pages/ContactPage';
@@ -19,7 +19,7 @@ const AppRouter: React.FC = () => {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/about" element={<AboutPage />} />
-            <Route path="/tourism" element={<TourismPage />} />
+            <Route path="/news" element={<NewsPage />} />
             <Route path="/business" element={<BusinessPage />} />
             <Route path="/map" element={<MapPage />} />
             <Route path="/contact" element={<ContactPage />} />

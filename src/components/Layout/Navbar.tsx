@@ -17,7 +17,7 @@ const Navbar: React.FC = () => {
   const navItems = [
     { name: 'Beranda', path: '/' },
     { name: 'Tentang', path: '/about' },
-    { name: 'Wisata', path: '/tourism' },
+    { name: 'Berita', path: '/news' },
     { name: 'Ekonomi', path: '/business' },
     { name: 'Peta', path: '/map' },
     { name: 'Kontak', path: '/contact' },

@@ -5,26 +5,26 @@ import Card from '../components/UI/Card';
 
 const AboutPage: React.FC = () => {
   const stats = [
-    { icon: Users, label: 'Population', value: '2,500+' },
-    { icon: MapPin, label: 'Area', value: '15 km²' },
-    { icon: Calendar, label: 'Founded', value: '1892' },
-    { icon: Award, label: 'Awards', value: '5+' },
+    { icon: Users, label: 'Jiwa Mulia', value: '2,500+' },
+    { icon: MapPin, label: 'Hamparan Surga', value: '15 km²' },
+    { icon: Calendar, label: 'Tahun Berdiri', value: '1892' },
+    { icon: Award, label: 'Prestasi Gemilang', value: '15+' },
   ];
 
   const traditions = [
     {
-      title: 'Annual Harvest Festival',
-      description: 'A celebration of our agricultural heritage with traditional dances, local food, and community gatherings.',
+      title: 'Festival Panen Raya yang Memukau',
+      description: 'Perayaan spektakuler warisan leluhur dengan tarian tradisional yang menghipnotis, kuliner khas yang menggugah selera, dan kebersamaan yang menyentuh hati.',
       image: 'https://images.unsplash.com/photo-1533900298318-6b8da08a523e?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
     },
     {
-      title: 'Traditional Crafts',
-      description: 'Local artisans continue centuries-old traditions of pottery, weaving, and woodcarving.',
+      title: 'Kerajinan Tangan Warisan Emas',
+      description: 'Para seniman lokal melestarikan tradisi berabad-abad dalam seni gerabah, tenun, dan ukiran kayu yang memukau mata dan menyentuh jiwa.',
       image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
     },
     {
-      title: 'Community Gardens',
-      description: 'Sustainable farming practices passed down through generations, focusing on organic methods.',
+      title: 'Kebun Komunitas Berkelanjutan',
+      description: 'Praktik pertanian organik turun-temurun yang menciptakan harmoni sempurna antara manusia dan alam, menghasilkan panen berlimpah penuh berkah.',
       image: 'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
     },
   ];
@@ -41,11 +41,11 @@ const AboutPage: React.FC = () => {
             className="text-center mb-16"
           >
             <h1 className="text-5xl md:text-6xl font-bold text-gray-900 dark:text-white mb-6">
-              About Our Village
+              Jiwa Masyarakat Bersatu
             </h1>
             <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-              Nestled in the heart of nature, our village represents a perfect blend of 
-              traditional values and modern sustainable living.
+              Terletak di jantung keindahan alam Sukabumi, Desa Cikadu adalah permata tersembunyi 
+              yang memancarkan kehangatan persaudaraan dan kearifan tradisi yang tak ternilai harganya.
             </p>
           </motion.div>
 
@@ -58,7 +58,7 @@ const AboutPage: React.FC = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
               >
-                <Card className="p-6 text-center">
+                <Card className="p-6 text-center hover:shadow-2xl transition-all duration-300">
                   <stat.icon className="h-8 w-8 text-primary-600 mx-auto mb-3" />
                   <div className="text-2xl font-bold text-gray-900 dark:text-white mb-1">
                     {stat.value}
@@ -84,24 +84,25 @@ const AboutPage: React.FC = () => {
               viewport={{ once: true }}
             >
               <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-6">
-                Our Story
+                Legenda yang Menginspirasi
               </h2>
-              <div className="space-y-4 text-gray-600 dark:text-gray-300">
+              <div className="space-y-4 text-gray-600 dark:text-gray-300 text-lg leading-relaxed">
                 <p>
-                  Founded in 1892 by a group of pioneering families, our village has grown 
-                  from a small agricultural settlement into a thriving community that 
-                  balances tradition with innovation.
+                  Didirikan pada tahun 1892 oleh sekelompok keluarga pemberani yang memiliki visi mulia, 
+                  Desa Cikadu telah berkembang dari pemukiman pertanian sederhana menjadi komunitas yang 
+                  menakjubkan, memadukan kearifan tradisi dengan inovasi modern yang membanggakan.
                 </p>
                 <p>
-                  Over the decades, we've maintained our commitment to sustainable living, 
-                  community cooperation, and environmental stewardship. Our residents take 
-                  pride in preserving the natural beauty that surrounds us while embracing 
-                  modern amenities and opportunities.
+                  Selama puluhan dekade, kami mempertahankan komitmen suci terhadap kehidupan berkelanjutan, 
+                  kerjasama komunitas yang menghangatkan hati, dan pelestarian lingkungan yang menginspirasi. 
+                  Penduduk kami bangga melestarikan keindahan alam yang menakjubkan sambil merangkul 
+                  fasilitas modern dan peluang emas yang tak terbatas.
                 </p>
                 <p>
-                  Today, our village serves as a model for rural development, attracting 
-                  visitors who seek authentic experiences and a connection to nature. 
-                  We welcome guests with open arms and invite them to be part of our story.
+                  Hari ini, Desa Cikadu berdiri sebagai model pembangunan pedesaan yang memukau, 
+                  menarik pengunjung yang mencari pengalaman autentik dan koneksi mendalam dengan alam. 
+                  Kami menyambut tamu dengan tangan terbuka dan hati yang hangat, mengundang mereka 
+                  menjadi bagian dari kisah legendaris kami.
                 </p>
               </div>
             </motion.div>
@@ -115,8 +116,8 @@ const AboutPage: React.FC = () => {
             >
               <img
                 src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-                alt="Village landscape"
-                className="rounded-2xl shadow-2xl"
+                alt="Pemandangan menakjubkan Desa Cikadu"
+                className="rounded-2xl shadow-2xl hover:shadow-3xl transition-all duration-300"
               />
             </motion.div>
           </div>
@@ -134,11 +135,11 @@ const AboutPage: React.FC = () => {
             className="text-center mb-16"
           >
             <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-6">
-              Our Traditions & Culture
+              Tradisi Suci & Budaya Memukau
             </h2>
             <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-              Rich cultural heritage and time-honored traditions that define our 
-              community identity and bring us together.
+              Warisan budaya yang kaya dan tradisi luhur yang telah mengakar dalam jiwa, 
+              membentuk identitas komunitas yang membanggakan dan menyatukan hati dalam kebersamaan.
             </p>
           </motion.div>
 
@@ -151,17 +152,17 @@ const AboutPage: React.FC = () => {
                 transition={{ duration: 0.8, delay: index * 0.2 }}
                 viewport={{ once: true }}
               >
-                <Card className="overflow-hidden">
+                <Card className="overflow-hidden hover:shadow-2xl transition-all duration-500">
                   <img
                     src={tradition.image}
                     alt={tradition.title}
-                    className="w-full h-48 object-cover"
+                    className="w-full h-48 object-cover hover:scale-105 transition-transform duration-300"
                   />
                   <div className="p-6">
                     <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">
                       {tradition.title}
                     </h3>
-                    <p className="text-gray-600 dark:text-gray-300">
+                    <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
                       {tradition.description}
                     </p>
                   </div>
@@ -185,8 +186,8 @@ const AboutPage: React.FC = () => {
             >
               <img
                 src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-                alt="Village geography"
-                className="rounded-2xl shadow-2xl"
+                alt="Keindahan geografis Desa Cikadu"
+                className="rounded-2xl shadow-2xl hover:shadow-3xl transition-all duration-300"
               />
             </motion.div>
 
@@ -198,29 +199,65 @@ const AboutPage: React.FC = () => {
               className="order-1 lg:order-2"
             >
               <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-6">
-                Geography & Environment
+                Surga Geografis & Lingkungan Menawan
               </h2>
-              <div className="space-y-4 text-gray-600 dark:text-gray-300">
+              <div className="space-y-4 text-gray-600 dark:text-gray-300 text-lg leading-relaxed">
                 <p>
-                  Our village is strategically located in a fertile valley, surrounded 
-                  by rolling hills and pristine forests. The region enjoys a temperate 
-                  climate with four distinct seasons, each bringing its own beauty 
-                  and agricultural opportunities.
+                  Desa Cikadu terletak strategis di lembah subur yang memukau, dikelilingi 
+                  perbukitan hijau yang mempesona dan hutan pristine yang menyejukkan jiwa. 
+                  Wilayah ini dikaruniai iklim tropis yang sempurna dengan empat musim yang 
+                  berbeda, masing-masing membawa keindahan dan peluang pertanian yang luar biasa.
                 </p>
                 <p>
-                  The area is blessed with natural springs, meandering streams, and 
-                  rich soil that has supported agriculture for generations. Our 
-                  commitment to environmental conservation ensures that future 
-                  generations will inherit the same natural beauty we enjoy today.
+                  Kawasan ini diberkahi mata air alami yang jernih, sungai berkelok yang 
+                  menenangkan, dan tanah subur yang telah mendukung pertanian selama 
+                  berabad-abad. Komitmen kami terhadap konservasi lingkungan memastikan 
+                  bahwa generasi mendatang akan mewarisi keindahan alam yang sama yang 
+                  kami nikmati hari ini.
                 </p>
                 <p>
-                  Wildlife thrives in our protected forests, and our sustainable 
-                  farming practices have created a harmonious ecosystem where 
-                  human activity and nature coexist peacefully.
+                  Satwa liar berkembang pesat di hutan lindung kami, dan praktik pertanian 
+                  berkelanjutan telah menciptakan ekosistem harmonis di mana aktivitas 
+                  manusia dan alam hidup berdampingan dalam kedamaian yang menginspirasi.
                 </p>
               </div>
             </motion.div>
           </div>
+        </div>
+      </section>
+
+      {/* Vision Section */}
+      <section className="py-20 bg-primary-600 dark:bg-primary-800">
+        <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+          >
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+              Visi Mulia untuk Masa Depan Gemilang
+            </h2>
+            <p className="text-xl text-primary-100 mb-8 max-w-3xl mx-auto leading-relaxed">
+              Kami bermimpi menjadi desa percontohan yang menginspirasi dunia, 
+              di mana tradisi luhur berpadu harmonis dengan inovasi modern, 
+              menciptakan kehidupan yang berkelanjutan dan membahagiakan bagi semua.
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
+              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6">
+                <h3 className="text-lg font-bold text-white mb-2">Keberlanjutan</h3>
+                <p className="text-primary-100 text-sm">Melestarikan alam untuk generasi mendatang</p>
+              </div>
+              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6">
+                <h3 className="text-lg font-bold text-white mb-2">Inovasi</h3>
+                <p className="text-primary-100 text-sm">Mengadopsi teknologi untuk kemajuan bersama</p>
+              </div>
+              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6">
+                <h3 className="text-lg font-bold text-white mb-2">Kebersamaan</h3>
+                <p className="text-primary-100 text-sm">Membangun komunitas yang saling mendukung</p>
+              </div>
+            </div>
+          </motion.div>
         </div>
       </section>
     </div>

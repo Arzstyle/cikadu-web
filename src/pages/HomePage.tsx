@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRight, MapPin, Users, Building, Leaf } from 'lucide-react';
+import { ArrowRight, MapPin, Users, Building, Newspaper } from 'lucide-react';
 import Button from '../components/UI/Button';
 import Card from '../components/UI/Card';
 import { useNavigate } from 'react-router-dom';
@@ -10,11 +10,11 @@ const HomePage: React.FC = () => {
 
   const features = [
     {
-      icon: MapPin,
-      title: 'Destinasi Wisata',
+      icon: Newspaper,
+      title: 'Fitur Berita Terkini',
       description:
-        'Jelajahi keindahan destinasi dan permata tersembunyi di desa kami',
-      path: '/tourism',
+        'Saksikan kisah-kisah menakjubkan dan peristiwa bersejarah yang menggetarkan jiwa warga Desa Cikadu',
+      path: '/news',
       gradient: 'from-blue-500 to-cyan-500',
       bgColor:
         'bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20',
@@ -22,9 +22,9 @@ const HomePage: React.FC = () => {
     },
     {
       icon: Building,
-      title: 'Usaha Lokal',
+      title: 'Kekuatan Ekonomi Lokal',
       description:
-        'Dukung pengusaha lokal dan temukan produk-produk unik khas desa',
+        'Temukan keajaiban usaha mandiri yang membanggakan, karya tangan emas para pejuang ekonomi desa',
       path: '/business',
       gradient: 'from-emerald-500 to-teal-500',
       bgColor:
@@ -33,9 +33,9 @@ const HomePage: React.FC = () => {
     },
     {
       icon: Users,
-      title: 'Kehidupan Masyarakat',
+      title: 'Jiwa Masyarakat Bersatu',
       description:
-        'Pelajari budaya kaya, tradisi, dan kehidupan sehari-hari masyarakat',
+        'Rasakan kehangatan persaudaraan yang mengalir dalam darah, tradisi suci yang menyatukan hati',
       path: '/about',
       gradient: 'from-violet-500 to-purple-500',
       bgColor:
@@ -43,10 +43,10 @@ const HomePage: React.FC = () => {
       iconColor: 'text-violet-600 dark:text-violet-400',
     },
     {
-      icon: Leaf,
-      title: 'Keindahan Alam',
+      icon: MapPin,
+      title: 'Surga Tersembunyi',
       description:
-        'Temukan lingkungan alami yang masih asri dan keanekaragaman hayati',
+        'Jelajahi keindahan alam yang memukau mata, panorama surgawi yang menyentuh relung hati terdalam',
       path: '/map',
       gradient: 'from-green-500 to-lime-500',
       bgColor:
@@ -86,7 +86,7 @@ const HomePage: React.FC = () => {
             transition={{ duration: 1, delay: 0.2, ease: 'easeOut' }}
             className="text-5xl md:text-7xl font-bold mb-6 leading-tight"
           >
-            Selamat Datang di
+            Selamat Datang di Surga
             <span className="block text-emerald-400 drop-shadow-lg">
               Desa Cikadu
             </span>
@@ -98,8 +98,8 @@ const HomePage: React.FC = () => {
             transition={{ duration: 1, delay: 0.4, ease: 'easeOut' }}
             className="text-xl md:text-2xl mb-10 text-gray-200 max-w-3xl mx-auto leading-relaxed font-medium drop-shadow-md"
           >
-            Temukan pesona autentik kehidupan desa, warisan budaya yang kaya,
-            dan lanskap alam yang menakjubkan yang membuat desa kami istimewa.
+            Bersiaplah terpesona oleh keajaiban alam yang menakjubkan, warisan budaya yang membanggakan, 
+            dan kehangatan jiwa masyarakat yang tak tergantikan di permata tersembunyi Sukabumi ini.
           </motion.p>
 
           <motion.div
@@ -110,12 +110,12 @@ const HomePage: React.FC = () => {
           >
             <Button
               size="lg"
-              onClick={() => navigate('/tourism')}
+              onClick={() => navigate('/news')}
               icon={ArrowRight}
               iconPosition="right"
               className="text-lg px-8 py-4 bg-emerald-600 text-white hover:bg-emerald-700 hover:shadow-xl transform hover:scale-105 transition-all duration-300 font-semibold border-0"
             >
-              Jelajahi Sekarang
+              Jelajahi Keajaiban Ini
             </Button>
             <Button
               variant="outline"
@@ -123,7 +123,7 @@ const HomePage: React.FC = () => {
               onClick={() => navigate('/about')}
               className="text-lg px-8 py-4 border-2 border-white/80 text-white hover:bg-white/10 hover:border-white backdrop-blur-sm font-semibold transform hover:scale-105 transition-all duration-300"
             >
-              Pelajari Lebih Lanjut
+              Temukan Kisah Kami
             </Button>
           </motion.div>
         </motion.div>
@@ -164,15 +164,15 @@ const HomePage: React.FC = () => {
               viewport={{ once: true }}
               className="inline-block px-4 py-2 bg-emerald-100 dark:bg-emerald-900/30 rounded-full text-emerald-700 dark:text-emerald-300 font-semibold text-sm mb-6"
             >
-              ✨ Keunikan Desa Kami
+              ✨ Keajaiban Tak Terbantahkan
             </motion.div>
 
             <h2 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-gray-900 via-emerald-800 to-gray-900 dark:from-white dark:via-emerald-300 dark:to-white bg-clip-text text-transparent mb-6">
-              Temukan Apa yang Membuat Kami Istimewa
+              Pesona Magis yang Menghipnotis Jiwa
             </h2>
             <p className="text-xl text-gray-600 dark:text-gray-300 max-w-4xl mx-auto leading-relaxed">
-              Dari lanskap alam yang memukau hingga usaha lokal yang berkembang,
-              desa kami menawarkan pengalaman unik untuk setiap pengunjung.
+              Dari lanskap alam yang memukau hingga semangat juang masyarakat yang menggelora,
+              Desa Cikadu menawarkan pengalaman luar biasa yang akan mengubah cara pandang Anda selamanya.
             </p>
           </motion.div>
 
@@ -229,7 +229,7 @@ const HomePage: React.FC = () => {
                       initial={{ x: -10 }}
                       whileHover={{ x: 0 }}
                     >
-                      <span className="text-sm font-semibold">Jelajahi</span>
+                      <span className="text-sm font-semibold">Jelajahi Sekarang</span>
                       <ArrowRight className="h-4 w-4" />
                     </motion.div>
                   </div>
@@ -332,8 +332,8 @@ const HomePage: React.FC = () => {
               viewport={{ once: true }}
               className="inline-flex items-center gap-2 px-6 py-3 bg-white/15 backdrop-blur-md rounded-full text-white font-semibold text-sm mb-8 border border-white/20 shadow-lg"
             >
-              <span className="text-lg">🚀</span>
-              <span>Mari Bergabung</span>
+              <span className="text-lg">🌟</span>
+              <span>Bergabunglah dengan Keajaiban</span>
               <div className="w-2 h-2 bg-cyan-300 rounded-full animate-pulse"></div>
             </motion.div>
 
@@ -345,10 +345,10 @@ const HomePage: React.FC = () => {
               viewport={{ once: true }}
               className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-8 leading-tight text-center"
             >
-              <span className="inline-block">Siap untuk</span>
+              <span className="inline-block">Siapkah Jiwa Anda</span>
               <br />
               <span className="bg-gradient-to-r from-cyan-300 via-white to-emerald-200 bg-clip-text text-transparent drop-shadow-lg">
-                Menjelajahi?
+                Terhanyut dalam Pesona?
               </span>
             </motion.h2>
 
@@ -359,14 +359,12 @@ const HomePage: React.FC = () => {
               viewport={{ once: true }}
               className="text-xl md:text-2xl text-white/90 mb-12 max-w-4xl mx-auto leading-relaxed font-medium drop-shadow-sm text-center"
             >
-              Bergabunglah dengan kami dalam perjalanan interaktif melalui desa
-              kami.
+              Ikuti kami dalam perjalanan magis menyelami keindahan Desa Cikadu.
               <span className="text-cyan-200 font-semibold">
                 {' '}
-                Bagikan pemikiran Anda
+                Bagikan cerita hati Anda
               </span>
-              , terhubung dengan penduduk lokal, dan jadilah bagian dari cerita
-              komunitas kami.
+              , terhubung dengan jiwa-jiwa mulia, dan jadilah bagian dari legenda yang akan dikenang selamanya.
             </motion.p>
 
             {/* Enhanced buttons - Optimized sizing */}
@@ -389,7 +387,7 @@ const HomePage: React.FC = () => {
                   icon={MapPin}
                   className="text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4 bg-white text-emerald-700 hover:bg-emerald-50 shadow-2xl hover:shadow-emerald-200/50 font-semibold rounded-xl border-0 backdrop-blur-sm transform transition-all duration-300 whitespace-nowrap"
                 >
-                  Lihat Peta Interaktif
+                  Jelajahi Peta Ajaib
                 </Button>
               </motion.div>
 
@@ -404,7 +402,7 @@ const HomePage: React.FC = () => {
                   onClick={() => navigate('/contact')}
                   className="text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4 border-2 border-white/60 text-white hover:bg-white/10 hover:border-white font-semibold rounded-xl backdrop-blur-md shadow-lg hover:shadow-white/20 transform transition-all duration-300 whitespace-nowrap"
                 >
-                  Hubungi Kami
+                  Sampaikan Hati Anda
                 </Button>
               </motion.div>
             </motion.div>
@@ -420,7 +418,7 @@ const HomePage: React.FC = () => {
               <div className="flex flex-col sm:flex-row items-center gap-3 text-white/70 text-xs sm:text-sm font-medium text-center">
                 <div className="hidden sm:block w-8 h-px bg-gradient-to-r from-transparent to-white/40"></div>
                 <span className="px-4 sm:px-0">
-                  Lebih dari 1000+ pengunjung telah menjelajahi
+                  Lebih dari 1000+ jiwa telah terpesona oleh keajaiban ini
                 </span>
                 <div className="hidden sm:block w-8 h-px bg-gradient-to-l from-transparent to-white/40"></div>
               </div>

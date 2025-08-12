@@ -4,15 +4,15 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import toast from 'react-hot-toast';
-import { Send, MapPin, Phone, Mail, Clock } from 'lucide-react';
+import { Send, MapPin, Phone, Mail, Clock, Heart } from 'lucide-react';
 import Button from '../components/UI/Button';
 import Card from '../components/UI/Card';
 import { supabase } from '../services/supabase';
 
 const schema = yup.object({
-  name: yup.string().required('Name is required').min(2, 'Name must be at least 2 characters'),
-  email: yup.string().required('Email is required').email('Please enter a valid email'),
-  message: yup.string().required('Message is required').min(10, 'Message must be at least 10 characters'),
+  name: yup.string().required('Nama wajib diisi').min(2, 'Nama minimal 2 karakter'),
+  email: yup.string().required('Email wajib diisi').email('Masukkan email yang valid'),
+  message: yup.string().required('Pesan wajib diisi').min(10, 'Pesan minimal 10 karakter'),
 });
 
 type FormData = yup.InferType<typeof schema>;
@@ -46,11 +46,11 @@ const ContactPage: React.FC = () => {
         console.log('Supabase not configured, showing success message');
       }
 
-      toast.success('Thank you for your message! We\'ll get back to you soon.');
+      toast.success('Terima kasih atas pesan hati Anda! Kami akan segera merespons dengan penuh kehangatan.');
       reset();
     } catch (error) {
       console.error('Error submitting feedback:', error);
-      toast.success('Thank you for your message! We\'ll get back to you soon.');
+      toast.success('Terima kasih atas pesan hati Anda! Kami akan segera merespons dengan penuh kehangatan.');
       reset();
     } finally {
       setIsSubmitting(false);
@@ -60,23 +60,23 @@ const ContactPage: React.FC = () => {
   const contactInfo = [
     {
       icon: MapPin,
-      title: 'Address',
-      details: ['Village Center, Main Street', 'District, Province 12345', 'Indonesia'],
+      title: 'Alamat Surga Kami',
+      details: ['Desa Cikadu, Kecamatan Pelabuhanratu', 'Kabupaten Sukabumi, Jawa Barat', 'Indonesia 43364'],
     },
     {
       icon: Phone,
-      title: 'Phone',
+      title: 'Sambungan Hati',
       details: ['+62 123-456-789', '+62 987-654-321'],
     },
     {
       icon: Mail,
-      title: 'Email',
-      details: ['info@villageprofile.com', 'tourism@villageprofile.com'],
+      title: 'Surat Elektronik',
+      details: ['info@desacikadu.id', 'wisata@desacikadu.id'],
     },
     {
       icon: Clock,
-      title: 'Office Hours',
-      details: ['Monday - Friday: 8:00 AM - 5:00 PM', 'Saturday: 9:00 AM - 2:00 PM', 'Sunday: Closed'],
+      title: 'Waktu Pelayanan',
+      details: ['Senin - Jumat: 08:00 - 17:00', 'Sabtu: 09:00 - 14:00', 'Minggu: Tutup'],
     },
   ];
 
@@ -92,11 +92,11 @@ const ContactPage: React.FC = () => {
             className="text-center mb-16"
           >
             <h1 className="text-5xl md:text-6xl font-bold text-gray-900 dark:text-white mb-6">
-              Get in Touch
+              Sampaikan Hati Anda
             </h1>
             <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-              We'd love to hear from you! Whether you have questions about visiting our village, 
-              want to share feedback, or need assistance, we're here to help.
+              Kami sangat menantikan untuk mendengar dari Anda! Baik itu pertanyaan tentang keindahan desa kami, 
+              berbagi masukan berharga, atau membutuhkan bantuan, kami siap melayani dengan sepenuh hati.
             </p>
           </motion.div>
         </div>
@@ -113,14 +113,17 @@ const ContactPage: React.FC = () => {
               transition={{ duration: 0.8 }}
               viewport={{ once: true }}
             >
-              <Card className="p-8">
-                <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">
-                  Send us a Message
-                </h2>
+              <Card className="p-8 hover:shadow-2xl transition-all duration-300">
+                <div className="flex items-center mb-6">
+                  <Heart className="h-6 w-6 text-red-500 mr-2" />
+                  <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
+                    Kirimkan Pesan Hati Anda
+                  </h2>
+                </div>
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                   <div>
                     <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      Full Name
+                      Nama Lengkap
                     </label>
                     <input
                       type="text"
@@ -130,8 +133,8 @@ const ContactPage: React.FC = () => {
                         errors.name 
                           ? 'border-red-300 dark:border-red-600' 
                           : 'border-gray-300 dark:border-gray-600'
-                      } bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500`}
-                      placeholder="Enter your full name"
+                      } bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-200`}
+                      placeholder="Masukkan nama lengkap Anda"
                     />
                     {errors.name && (
                       <p className="text-red-600 text-sm mt-1">{errors.name.message}</p>
@@ -140,7 +143,7 @@ const ContactPage: React.FC = () => {
 
                   <div>
                     <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      Email Address
+                      Alamat Email
                     </label>
                     <input
                       type="email"
@@ -150,8 +153,8 @@ const ContactPage: React.FC = () => {
                         errors.email 
                           ? 'border-red-300 dark:border-red-600' 
                           : 'border-gray-300 dark:border-gray-600'
-                      } bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500`}
-                      placeholder="Enter your email address"
+                      } bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-200`}
+                      placeholder="Masukkan alamat email Anda"
                     />
                     {errors.email && (
                       <p className="text-red-600 text-sm mt-1">{errors.email.message}</p>
@@ -160,7 +163,7 @@ const ContactPage: React.FC = () => {
 
                   <div>
                     <label htmlFor="message" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      Message
+                      Pesan dari Hati
                     </label>
                     <textarea
                       id="message"
@@ -170,8 +173,8 @@ const ContactPage: React.FC = () => {
                         errors.message 
                           ? 'border-red-300 dark:border-red-600' 
                           : 'border-gray-300 dark:border-gray-600'
-                      } bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 resize-none`}
-                      placeholder="Tell us how we can help you..."
+                      } bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 resize-none transition-all duration-200`}
+                      placeholder="Ceritakan apa yang ada di hati Anda..."
                     />
                     {errors.message && (
                       <p className="text-red-600 text-sm mt-1">{errors.message.message}</p>
@@ -183,9 +186,9 @@ const ContactPage: React.FC = () => {
                     size="lg"
                     icon={Send}
                     disabled={isSubmitting}
-                    className="w-full"
+                    className="w-full hover:shadow-xl transition-all duration-300"
                   >
-                    {isSubmitting ? 'Sending...' : 'Send Message'}
+                    {isSubmitting ? 'Mengirim dengan Cinta...' : 'Kirim Pesan Hati'}
                   </Button>
                 </form>
               </Card>
@@ -201,11 +204,11 @@ const ContactPage: React.FC = () => {
             >
               <div>
                 <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">
-                  Contact Information
+                  Informasi Kontak Kami
                 </h2>
-                <p className="text-gray-600 dark:text-gray-300 mb-8">
-                  Reach out to us through any of the following channels. We're committed to 
-                  responding to all inquiries within 24 hours.
+                <p className="text-gray-600 dark:text-gray-300 mb-8 text-lg leading-relaxed">
+                  Hubungi kami melalui berbagai saluran komunikasi berikut. Kami berkomitmen 
+                  merespons semua pertanyaan dalam waktu 24 jam dengan penuh perhatian dan kehangatan.
                 </p>
               </div>
 
@@ -218,7 +221,7 @@ const ContactPage: React.FC = () => {
                     transition={{ duration: 0.6, delay: index * 0.1 }}
                     viewport={{ once: true }}
                   >
-                    <Card className="p-6 h-full">
+                    <Card className="p-6 h-full hover:shadow-xl transition-all duration-300">
                       <div className="flex items-start space-x-4">
                         <div className="flex-shrink-0">
                           <div className="w-12 h-12 bg-primary-100 dark:bg-primary-900 rounded-lg flex items-center justify-center">
@@ -244,15 +247,15 @@ const ContactPage: React.FC = () => {
               </div>
 
               {/* Map Preview */}
-              <Card className="p-6">
+              <Card className="p-6 hover:shadow-xl transition-all duration-300">
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-                  Find Us Here
+                  Temukan Surga Kami di Sini
                 </h3>
                 <div className="bg-gray-200 dark:bg-gray-700 rounded-lg h-48 flex items-center justify-center">
                   <div className="text-center">
                     <MapPin className="h-12 w-12 text-gray-400 mx-auto mb-2" />
-                    <p className="text-gray-500 dark:text-gray-400">
-                      Interactive map will be displayed here
+                    <p className="text-gray-500 dark:text-gray-400 mb-2">
+                      Peta interaktif akan ditampilkan di sini
                     </p>
                     <Button
                       variant="outline"
@@ -260,7 +263,7 @@ const ContactPage: React.FC = () => {
                       className="mt-2"
                       onClick={() => window.open('/map', '_blank')}
                     >
-                      View Full Map
+                      Lihat Peta Lengkap
                     </Button>
                   </div>
                 </div>
@@ -281,30 +284,34 @@ const ContactPage: React.FC = () => {
             className="text-center mb-12"
           >
             <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-6">
-              Frequently Asked Questions
+              Pertanyaan yang Sering Menggugah Hati
             </h2>
             <p className="text-xl text-gray-600 dark:text-gray-300">
-              Quick answers to common questions about visiting our village.
+              Jawaban cepat untuk pertanyaan umum tentang mengunjungi surga kecil kami.
             </p>
           </motion.div>
 
           <div className="space-y-6">
             {[
               {
-                question: 'What are the best months to visit?',
-                answer: 'The best time to visit is during the dry season from April to October, when the weather is pleasant and most outdoor activities are available.',
+                question: 'Kapan waktu terbaik untuk mengunjungi Desa Cikadu?',
+                answer: 'Waktu terbaik adalah selama musim kemarau dari April hingga Oktober, ketika cuaca cerah dan sebagian besar aktivitas outdoor tersedia dengan kondisi optimal.',
               },
               {
-                question: 'Are there accommodations available?',
-                answer: 'Yes, we have several homestays and guesthouses run by local families. Contact us for reservations and recommendations.',
+                question: 'Apakah tersedia akomodasi untuk menginap?',
+                answer: 'Ya, kami memiliki beberapa homestay dan rumah tamu yang dikelola keluarga lokal dengan kehangatan khas desa. Hubungi kami untuk reservasi dan rekomendasi terbaik.',
               },
               {
-                question: 'How do I get to the village?',
-                answer: 'The village is accessible by bus from the nearest city, followed by a short motorbike ride. We can arrange transportation upon request.',
+                question: 'Bagaimana cara menuju ke Desa Cikadu?',
+                answer: 'Desa dapat diakses dengan bus dari kota terdekat, dilanjutkan perjalanan singkat dengan ojek. Kami dapat mengatur transportasi atas permintaan dengan senang hati.',
               },
               {
-                question: 'What activities are available for tourists?',
-                answer: 'We offer hiking trails, cultural workshops, traditional farming experiences, and guided tours of historical sites.',
+                question: 'Aktivitas apa saja yang tersedia untuk wisatawan?',
+                answer: 'Kami menawarkan jalur hiking yang menakjubkan, workshop budaya yang menginspirasi, pengalaman pertanian tradisional, dan tur situs bersejarah yang memukau.',
+              },
+              {
+                question: 'Apakah ada panduan lokal yang bisa membantu?',
+                answer: 'Tentu saja! Kami memiliki pemandu lokal berpengalaman yang siap berbagi pengetahuan mendalam tentang sejarah, budaya, dan keindahan alam desa kami.',
               },
             ].map((faq, index) => (
               <motion.div
@@ -314,17 +321,45 @@ const ContactPage: React.FC = () => {
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 viewport={{ once: true }}
               >
-                <Card className="p-6">
+                <Card className="p-6 hover:shadow-xl transition-all duration-300">
                   <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">
                     {faq.question}
                   </h3>
-                  <p className="text-gray-600 dark:text-gray-300">
+                  <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
                     {faq.answer}
                   </p>
                 </Card>
               </motion.div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-20 bg-primary-600 dark:bg-primary-800">
+        <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+          >
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+              Mari Bersama Membangun Mimpi
+            </h2>
+            <p className="text-xl text-primary-100 mb-8 max-w-2xl mx-auto">
+              Setiap pesan dari Anda adalah langkah berharga menuju masa depan yang lebih cerah 
+              bagi Desa Cikadu. Mari bersama-sama mewujudkan impian komunitas yang berkelanjutan.
+            </p>
+            <Button
+              variant="secondary"
+              size="lg"
+              className="bg-white text-primary-600 hover:bg-gray-100 hover:shadow-xl transition-all duration-300"
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            >
+              Mulai Percakapan Sekarang
+            </Button>
+          </motion.div>
         </div>
       </section>
     </div>
