@@ -6,6 +6,7 @@ import Footer from '../components/Layout/Footer';
 import HomePage from '../pages/HomePage';
 import AboutPage from '../pages/AboutPage';
 import NewsPage from '../pages/NewsPage';
+import NewsDetailPage from '../pages/NewsDetailPage';
 import BusinessPage from '../pages/BusinessPage';
 import MapPage from '../pages/MapPage';
 import ContactPage from '../pages/ContactPage';
@@ -20,6 +21,7 @@ const AppRouter: React.FC = () => {
             <Route path="/" element={<HomePage />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/news" element={<NewsPage />} />
+            <Route path="/news/:id" element={<NewsDetailPage />} />
             <Route path="/business" element={<BusinessPage />} />
             <Route path="/map" element={<MapPage />} />
             <Route path="/contact" element={<ContactPage />} />
