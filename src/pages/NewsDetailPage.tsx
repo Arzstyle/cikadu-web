@@ -606,38 +606,63 @@ const NewsDetailPage: React.FC = () => {
             </div>
           </motion.div>
 
-          {/* Call to Action */}
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, delay: 0.8 }}
-        viewport={{ once: true }}
-        className="text-center mt-12"
-      >
-        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-          <Button
-        onClick={() => navigate('/news')}
+          {/* Call to Action (tanpa warna putih) */}
+<motion.div
+  initial={{ opacity: 0, y: 30 }}
+  whileInView={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.8, delay: 0.8 }}
+  viewport={{ once: true }}
+  className="text-center mt-12"
+>
+  <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+    {/* Jika elemen kiri adalah input pencarian */}
+    <div className="w-full sm:w-[360px]">
+      <input
+        type="search"
+        placeholder="Cari berita, program, atau topik..."
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            // handle search
+            navigate('/news'); // contoh behaviour
+          }
+        }}
         className={
-          "bg-white text-emerald-700 hover:bg-emerald-50 " +
-          "font-bold py-4 px-8 rounded-xl transition-all duration-300 " +
-          "shadow-lg hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-emerald-200/60"
+          "w-full py-3 px-4 rounded-xl placeholder-emerald-200 " +
+          "bg-emerald-800/30 text-white border border-emerald-600 " +
+          "focus:outline-none focus:ring-4 focus:ring-emerald-700/40 " +
+          "transition-colors duration-200"
         }
-      >
-        Lihat Berita Lainnya
-      </Button>
-      
-      <Button
-        onClick={() => navigate('/')}
-        variant="outline"
-        className={
-          "border-2 border-white text-white bg-transparent hover:bg-white/90 hover:text-emerald-700 " +
-          "font-bold py-4 px-8 rounded-xl transition-all duration-300 " +
-          "focus:outline-none focus:ring-4 focus:ring-white/30"
-        }
-      >
-        Kembali ke Beranda
-      </Button>
+        aria-label="Cari berita"
+      />
+    </div>
 
+    {/* Tombol utama (CTA) */}
+    <Button
+      onClick={() => navigate('/news')}
+      className={
+        "bg-gradient-to-r from-emerald-500 to-emerald-600 text-white " +
+        "font-bold py-4 px-8 rounded-xl transition-transform duration-200 " +
+        "shadow-xl hover:scale-[1.02] hover:shadow-2xl focus:outline-none " +
+        "focus:ring-4 focus:ring-emerald-300/30"
+      }
+      aria-label="Lihat Berita Lainnya"
+    >
+      Lihat Berita Lainnya
+    </Button>
+
+    {/* Tombol secondary (outline tapi bukan putih) */}
+    <Button
+      onClick={() => navigate('/')}
+      variant="outline"
+      className={
+        "border-2 border-emerald-200/40 text-white bg-emerald-900/10 " +
+        "py-4 px-8 rounded-xl transition-colors duration-200 hover:bg-emerald-600/90 " +
+        "hover:text-white font-semibold focus:outline-none focus:ring-4 focus:ring-emerald-500/25"
+      }
+      aria-label="Kembali ke Beranda"
+    >
+      Kembali ke Beranda
+    </Button>
   </div>
 
             <div className="mt-8 flex items-center justify-center space-x-8 text-emerald-100 text-sm flex-wrap gap-4">
