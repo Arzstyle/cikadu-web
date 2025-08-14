@@ -620,7 +620,7 @@ const NewsDetailPage: React.FC = () => {
     <Button
   onClick={() => navigate('/news')}
   className={
-    "bg-white text-emerald-700 hover:bg-emerald-50 " +
+    "bg-black text-emerald-700 hover:bg-emerald-50 " +
     "font-bold py-4 px-8 rounded-xl transition-all duration-300 " +
     "shadow-lg hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-emerald-200/60"
   }
