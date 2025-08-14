@@ -640,8 +640,6 @@ const NewsDetailPage: React.FC = () => {
       Kembali ke Beranda
     </Button>
   </div>
-</motion.div>
-
 
             <div className="mt-8 flex items-center justify-center space-x-8 text-emerald-100 text-sm flex-wrap gap-4">
               <div className="flex items-center">
