@@ -624,7 +624,7 @@ const NewsDetailPage: React.FC = () => {
               <Button
                 onClick={() => navigate('/')}
                 variant="outline"
-                className="border-2 border-white text-white hover:bg-white hover:text-emerald-600 font-bold py-4 px-8 rounded-xl transition-all duration-300"
+                className="absolute inset-0 bg-gradient-to-r from-white to-emerald-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl"
               >
                 Kembali ke Beranda
               </Button>
