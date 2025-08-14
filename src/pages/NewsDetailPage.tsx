@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Calendar, User, Eye, Heart, Share2, Tag, Clock, TrendingUp, BookOpen, MessageCircle } from 'lucide-react';
+import { ArrowLeft, Calendar, User, Share2, Tag, Clock, TrendingUp, BookOpen, MessageCircle, Phone, MapPin, Mail, ExternalLink, Heart } from 'lucide-react';
 import Button from '../components/UI/Button';
 import Card from '../components/UI/Card';
 import LoadingSpinner from '../components/UI/LoadingSpinner';
@@ -14,8 +14,6 @@ interface NewsArticle {
   image_url: string;
   author: string;
   category: string;
-  views: number;
-  likes: number;
   created_at: string;
 }
 
@@ -24,8 +22,9 @@ const NewsDetailPage: React.FC = () => {
   const navigate = useNavigate();
   const [article, setArticle] = useState<NewsArticle | null>(null);
   const [loading, setLoading] = useState(true);
-  const [liked, setLiked] = useState(false);
   const [readingTime, setReadingTime] = useState(0);
+  const [isLiked, setIsLiked] = useState(false);
+  const [shareCount, setShareCount] = useState(Math.floor(Math.random() * 50) + 10);
 
   const mockArticles: NewsArticle[] = [
     {
@@ -50,8 +49,6 @@ const NewsDetailPage: React.FC = () => {
       image_url: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
       author: 'Tim KKN Universitas Nusa Putra',
       category: 'pendidikan',
-      views: 1250,
-      likes: 89,
       created_at: '2024-01-15T10:00:00Z',
     },
     {
@@ -62,8 +59,6 @@ const NewsDetailPage: React.FC = () => {
       image_url: 'https://images.unsplash.com/photo-1581833971358-2c8b550f87b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
       author: 'Kepala Desa Cikadu',
       category: 'infrastruktur',
-      views: 2100,
-      likes: 156,
       created_at: '2024-01-12T14:30:00Z',
     },
     {
@@ -74,8 +69,6 @@ const NewsDetailPage: React.FC = () => {
       image_url: 'https://images.unsplash.com/photo-1533900298318-6b8da08a523e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
       author: 'Karang Taruna Desa Cikadu',
       category: 'budaya',
-      views: 3200,
-      likes: 245,
       created_at: '2024-01-10T19:00:00Z',
     },
   ];
@@ -86,7 +79,6 @@ const NewsDetailPage: React.FC = () => {
 
   useEffect(() => {
     if (article) {
-      // Calculate reading time (average 200 words per minute)
       const wordCount = article.content.replace(/<[^>]*>/g, '').split(' ').length;
       setReadingTime(Math.ceil(wordCount / 200));
     }
@@ -97,8 +89,6 @@ const NewsDetailPage: React.FC = () => {
       const foundArticle = mockArticles.find(article => article.id === id);
       if (foundArticle) {
         setArticle(foundArticle);
-        // Simulate view increment
-        foundArticle.views += 1;
       } else {
         navigate('/news');
       }
@@ -107,16 +97,6 @@ const NewsDetailPage: React.FC = () => {
       navigate('/news');
     } finally {
       setLoading(false);
-    }
-  };
-
-  const handleLike = () => {
-    if (article) {
-      setLiked(!liked);
-      setArticle({
-        ...article,
-        likes: liked ? article.likes - 1 : article.likes + 1
-      });
     }
   };
 
@@ -129,7 +109,12 @@ const NewsDetailPage: React.FC = () => {
       });
     } else if (article) {
       await navigator.clipboard.writeText(window.location.href);
+      setShareCount(prev => prev + 1);
     }
+  };
+
+  const handleLike = () => {
+    setIsLiked(!isLiked);
   };
 
   const getCategoryColor = (category: string) => {
@@ -149,18 +134,6 @@ const NewsDetailPage: React.FC = () => {
       month: 'long',
       day: 'numeric'
     });
-  };
-
-  const getTimeAgo = (dateString: string) => {
-    const now = new Date();
-    const date = new Date(dateString);
-    const diffInHours = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60));
-    
-    if (diffInHours < 24) return `${diffInHours} jam yang lalu`;
-    const diffInDays = Math.floor(diffInHours / 24);
-    if (diffInDays < 7) return `${diffInDays} hari yang lalu`;
-    const diffInWeeks = Math.floor(diffInDays / 7);
-    return `${diffInWeeks} minggu yang lalu`;
   };
 
   if (loading) {
@@ -264,25 +237,20 @@ const NewsDetailPage: React.FC = () => {
                     <Calendar className="h-5 w-5 mr-2" />
                     <div>
                       <div className="font-medium">{formatDate(article.created_at)}</div>
-                      <div className="text-sm text-white/70">{getTimeAgo(article.created_at)}</div>
+                      <div className="text-sm text-white/70">Dipublikasikan</div>
                     </div>
                   </div>
                 </div>
                 
-                <div className="flex items-center space-x-6">
-                  <div className="flex items-center text-white/90">
-                    <Eye className="h-5 w-5 mr-2" />
-                    <span className="font-semibold">{article.views.toLocaleString()}</span>
-                    <span className="ml-1 text-sm">views</span>
-                  </div>
+                <div className="flex items-center space-x-4">
                   <button
                     onClick={handleLike}
-                    className={`flex items-center space-x-2 transition-all duration-300 ${
-                      liked ? 'text-red-400' : 'text-white/90 hover:text-red-400'
+                    className={`flex items-center space-x-2 transition-all duration-300 bg-white/20 backdrop-blur-sm px-4 py-2 rounded-lg border border-white/30 ${
+                      isLiked ? 'text-red-300 hover:text-red-200' : 'text-white/90 hover:text-white'
                     }`}
                   >
-                    <Heart className={`h-5 w-5 ${liked ? 'fill-current' : ''}`} />
-                    <span className="font-semibold">{article.likes}</span>
+                    <Heart className={`h-5 w-5 ${isLiked ? 'fill-current' : ''}`} />
+                    <span className="font-medium">Suka</span>
                   </button>
                   <button
                     onClick={handleShare}
@@ -290,6 +258,7 @@ const NewsDetailPage: React.FC = () => {
                   >
                     <Share2 className="h-5 w-5" />
                     <span className="font-medium">Bagikan</span>
+                    <span className="text-xs bg-white/30 rounded-full px-2 py-0.5">{shareCount}</span>
                   </button>
                 </div>
               </div>
@@ -337,12 +306,12 @@ const NewsDetailPage: React.FC = () => {
                       <button
                         onClick={handleLike}
                         className={`px-4 py-2 rounded-lg flex items-center space-x-2 transition-all duration-300 ${
-                          liked 
-                            ? 'bg-red-500 text-white' 
-                            : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-600'
+                          isLiked 
+                            ? 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300'
+                            : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-red-100 dark:hover:bg-red-900/30'
                         }`}
                       >
-                        <Heart className={`h-4 w-4 ${liked ? 'fill-current' : ''}`} />
+                        <Heart className={`h-4 w-4 ${isLiked ? 'fill-current' : ''}`} />
                         <span>Suka</span>
                       </button>
                       <button
@@ -414,11 +383,6 @@ const NewsDetailPage: React.FC = () => {
                           {relatedArticle.category.toUpperCase()}
                         </span>
                       </div>
-                      <div className="absolute bottom-4 left-4">
-                        <span className="text-white text-xs font-medium bg-black/50 px-2 py-1 rounded backdrop-blur-sm">
-                          {getTimeAgo(relatedArticle.created_at)}
-                        </span>
-                      </div>
                     </div>
                     
                     <div className="p-6 flex flex-col h-full">
@@ -434,15 +398,9 @@ const NewsDetailPage: React.FC = () => {
                           <User className="h-4 w-4 mr-1" />
                           <span className="truncate max-w-[120px] font-medium">{relatedArticle.author}</span>
                         </div>
-                        <div className="flex items-center space-x-3">
-                          <div className="flex items-center">
-                            <Eye className="h-4 w-4 mr-1 text-blue-500" />
-                            <span>{relatedArticle.views.toLocaleString()}</span>
-                          </div>
-                          <div className="flex items-center">
-                            <Heart className="h-4 w-4 mr-1 text-red-500" />
-                            <span>{relatedArticle.likes}</span>
-                          </div>
+                        <div className="flex items-center">
+                          <Calendar className="h-4 w-4 mr-1" />
+                          <span>{formatDate(relatedArticle.created_at)}</span>
                         </div>
                       </div>
                       
@@ -471,7 +429,7 @@ const NewsDetailPage: React.FC = () => {
         </div>
       </section>
 
-      {/* Enhanced Newsletter CTA */}
+      {/* Enhanced Contact Information Section */}
       <section 
         className="py-20 relative overflow-hidden"
         style={{
@@ -486,51 +444,209 @@ const NewsDetailPage: React.FC = () => {
         <div className="absolute inset-0 opacity-20">
           <div className="absolute top-20 left-20 w-64 h-64 bg-white rounded-full mix-blend-overlay filter blur-xl animate-pulse"></div>
           <div className="absolute bottom-20 right-20 w-80 h-80 bg-emerald-300 rounded-full mix-blend-overlay filter blur-2xl animate-pulse delay-1000"></div>
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-green-200 rounded-full mix-blend-overlay filter blur-3xl animate-pulse delay-2000"></div>
         </div>
 
-        <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
+            className="text-center mb-16"
           >
             <div className="inline-flex items-center px-4 py-2 mb-6 rounded-full bg-white/20 backdrop-blur-sm border border-white/30">
-              <Heart className="w-5 h-5 text-white mr-2" />
-              <span className="text-white font-medium">Jangan Lewatkan Update Terbaru</span>
+              <MessageCircle className="w-5 h-5 text-white mr-2" />
+              <span className="text-white font-medium">Hubungi Kami</span>
             </div>
 
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6 leading-tight">
-              Tetap Terdepan dengan
-              <br />
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">
               <span className="bg-gradient-to-r from-white via-emerald-100 to-white bg-clip-text text-transparent">
-                Berita Desa Cikadu
+                Terlibat Aktif dalam
               </span>
+              <br />
+              <span className="text-emerald-100">Pembangunan Desa</span>
             </h2>
             
-            <p className="text-xl text-emerald-50 mb-8 max-w-2xl mx-auto leading-relaxed">
-              Berlangganan newsletter kami dan dapatkan informasi terbaru mengenai 
-              program KKN dan perkembangan Desa Cikadu langsung di email Anda.
+            <p className="text-xl md:text-2xl text-emerald-50 mb-12 max-w-3xl mx-auto leading-relaxed font-light">
+              Mari bergabung dan berpartisipasi dalam <strong className="text-white">transformasi berkelanjutan</strong> 
+              Desa Cikadu menuju <strong className="text-white">masyarakat digital yang maju</strong> dan sejahtera.
             </p>
+          </motion.div>
 
-            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 shadow-2xl max-w-xl mx-auto">
-              <div className="flex flex-col sm:flex-row gap-3">
-                <input
-                  type="email"
-                  placeholder="Masukkan email Anda..."
-                  className="flex-1 px-4 py-3 rounded-lg border-0 bg-white/90 backdrop-blur-sm text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-white focus:bg-white transition-all duration-300"
-                />
-                <Button
-                  variant="secondary"
-                  className="bg-white text-emerald-600 hover:bg-emerald-50 font-bold py-3 px-6 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl whitespace-nowrap"
-                >
-                  Berlangganan
-                </Button>
-              </div>
+          {/* Contact Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+            {[
+              {
+                icon: Phone,
+                title: "Hubungi Langsung",
+                description: "Kantor Desa Cikadu",
+                contact: "+62 266 431234",
+                action: "Telepon Sekarang",
+                color: "bg-blue-500"
+              },
+              {
+                icon: Mail,
+                title: "Kirim Email",
+                description: "Untuk pertanyaan dan saran",
+                contact: "info@desacikadu.id",
+                action: "Kirim Email",
+                color: "bg-emerald-500"
+              },
+              {
+                icon: MapPin,
+                title: "Kunjungi Kami",
+                description: "Desa Cikadu, Pelabuhanratu",
+                contact: "Sukabumi, Jawa Barat",
+                action: "Lihat Peta",
+                color: "bg-purple-500"
+              }
+            ].map((contact, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: index * 0.2 }}
+                viewport={{ once: true }}
+                className="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20 hover:bg-white/15 transition-all duration-300 group cursor-pointer"
+              >
+                <div className={`w-16 h-16 ${contact.color} rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300`}>
+                  <contact.icon className="w-8 h-8 text-white" />
+                </div>
+                
+                <h3 className="text-2xl font-bold text-white mb-3">{contact.title}</h3>
+                <p className="text-emerald-100 mb-2 text-lg">{contact.description}</p>
+                <p className="text-white font-semibold text-xl mb-6">{contact.contact}</p>
+                
+                <button className="w-full bg-white/20 hover:bg-white/30 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300 border border-white/30 hover:border-white/50">
+                  {contact.action}
+                </button>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Social Media & Additional Info */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.6 }}
+            viewport={{ once: true }}
+            className="text-center"
+          >
+            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20">
+              <h3 className="text-2xl font-bold text-white mb-6">Ikuti Media Sosial Kami</h3>
               
-              <p className="text-emerald-100 text-sm mt-3">
-                🔒 100% gratis, tanpa spam, bisa berhenti kapan saja
-              </p>
+              <div className="flex flex-wrap justify-center gap-4 mb-8">
+                {[
+                  { name: 'WhatsApp Grup Desa', icon: '📱', color: 'bg-green-600' },
+                  { name: 'Facebook Desa', icon: '📘', color: 'bg-blue-600' },
+                  { name: 'Instagram Desa', icon: '📸', color: 'bg-pink-600' },
+                  { name: 'YouTube Channel', icon: '🎥', color: 'bg-red-600' }
+                ].map((social, index) => (
+                  <button
+                    key={index}
+                    className={`${social.color} hover:opacity-90 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300 flex items-center space-x-2 shadow-lg hover:shadow-xl`}
+                  >
+                    <span className="text-lg">{social.icon}</span>
+                    <span>{social.name}</span>
+                  </button>
+                ))}
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-left">
+                <div className="space-y-4">
+                  <h4 className="text-xl font-bold text-white mb-4 flex items-center">
+                    <Clock className="w-5 h-5 mr-2" />
+                    Jam Operasional
+                  </h4>
+                  <div className="space-y-2 text-emerald-100">
+                    <div className="flex justify-between">
+                      <span>Senin - Jumat</span>
+                      <span className="font-semibold">08:00 - 16:00 WIB</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Sabtu</span>
+                      <span className="font-semibold">08:00 - 12:00 WIB</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Minggu</span>
+                      <span className="font-semibold text-yellow-300">Tutup</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  <h4 className="text-xl font-bold text-white mb-4 flex items-center">
+                    <ExternalLink className="w-5 h-5 mr-2" />
+                    Layanan Online
+                  </h4>
+                  <div className="space-y-3">
+                    {[
+                      'Surat Keterangan Online',
+                      'Pengaduan Masyarakat',
+                      'Informasi Program Desa',
+                      'Konsultasi KKN'
+                    ].map((service, index) => (
+                      <div key={index} className="flex items-center text-emerald-100">
+                        <div className="w-2 h-2 bg-emerald-400 rounded-full mr-3"></div>
+                        <span>{service}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-8 pt-6 border-t border-white/20 text-emerald-100">
+                <p className="text-lg leading-relaxed">
+                  <strong className="text-white">Program KKN Universitas Nusa Putra</strong> bersama masyarakat 
+                  Desa Cikadu berkomitmen untuk menciptakan transformasi berkelanjutan menuju 
+                  <strong className="text-white"> desa digital yang maju, sejahtera, dan berdaya saing</strong>.
+                </p>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Call to Action */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.8 }}
+            viewport={{ once: true }}
+            className="text-center mt-12"
+          >
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <Button
+                onClick={() => navigate('/news')}
+                className="bg-white text-emerald-600 hover:bg-emerald-50 font-bold py-4 px-8 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl"
+              >
+                Lihat Berita Lainnya
+              </Button>
+              <Button
+                onClick={() => navigate('/')}
+                variant="outline"
+                className="border-2 border-white text-white hover:bg-white hover:text-emerald-600 font-bold py-4 px-8 rounded-xl transition-all duration-300"
+              >
+                Kembali ke Beranda
+              </Button>
+            </div>
+
+            <div className="mt-8 flex items-center justify-center space-x-8 text-emerald-100 text-sm flex-wrap gap-4">
+              <div className="flex items-center">
+                <span className="w-2 h-2 bg-emerald-300 rounded-full mr-2"></span>
+                <span>Berita Terpercaya</span>
+              </div>
+              <div className="flex items-center">
+                <span className="w-2 h-2 bg-emerald-300 rounded-full mr-2"></span>
+                <span>Update Harian</span>
+              </div>
+              <div className="flex items-center">
+                <span className="w-2 h-2 bg-emerald-300 rounded-full mr-2"></span>
+                <span>Program KKN</span>
+              </div>
+              <div className="flex items-center">
+                <span className="w-2 h-2 bg-emerald-300 rounded-full mr-2"></span>
+                <span>Transformasi Digital</span>
+              </div>
             </div>
           </motion.div>
         </div>
