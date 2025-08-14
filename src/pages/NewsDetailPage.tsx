@@ -607,28 +607,41 @@ const NewsDetailPage: React.FC = () => {
           </motion.div>
 
           {/* Call to Action */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.8 }}
-            viewport={{ once: true }}
-            className="text-center mt-12"
-          >
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <Button
-                onClick={() => navigate('/news')}
-                className="bg-white text-emerald-600 hover:bg-emerald-50 font-bold py-4 px-8 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl"
-              >
-                Lihat Berita Lainnya
-              </Button>
-              <Button
-                onClick={() => navigate('/')}
-                variant="outline"
-                className="border-2 border-white text-white hover:bg-white hover:text-emerald-600 font-bold py-4 px-8 rounded-xl transition-all duration-300"
-              >
-                Kembali ke Beranda
-              </Button>
-            </div>
+<motion.div
+  initial={{ opacity: 0, y: 30 }}
+  whileInView={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.8, delay: 0.8 }}
+  viewport={{ once: true }}
+  className="text-center mt-12"
+>
+  <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+    <Button
+      onClick={() => navigate('/news')}
+      className={
+        "bg-emerald-600 text-white hover:bg-emerald-700 " +
+        "font-bold py-4 px-8 rounded-xl transition-all duration-300 " +
+        "shadow-lg hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-emerald-300/50"
+      }
+      aria-label="Lihat Berita Lainnya"
+    >
+      Lihat Berita Lainnya
+    </Button>
+
+    <Button
+      onClick={() => navigate('/')}
+      variant="outline"
+      className={
+        "border-2 border-white text-white bg-transparent hover:bg-white hover:text-emerald-700 " +
+        "font-bold py-4 px-8 rounded-xl transition-all duration-300 " +
+        "shadow-none hover:shadow-md focus:outline-none focus:ring-4 focus:ring-white/30"
+      }
+      aria-label="Kembali ke Beranda"
+    >
+      Kembali ke Beranda
+    </Button>
+  </div>
+</motion.div>
+
 
             <div className="mt-8 flex items-center justify-center space-x-8 text-emerald-100 text-sm flex-wrap gap-4">
               <div className="flex items-center">
