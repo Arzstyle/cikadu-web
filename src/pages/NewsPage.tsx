@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { Calendar, User, Eye, Heart, Share2, Search, Filter, ArrowRight, TrendingUp, Clock } from 'lucide-react';
+import { Calendar, User, Search, Filter, ArrowRight, TrendingUp, BookOpen, ChevronDown, X } from 'lucide-react';
 import Card from '../components/UI/Card';
 import Button from '../components/UI/Button';
 import LoadingSpinner from '../components/UI/LoadingSpinner';
@@ -15,8 +15,6 @@ interface NewsArticle {
   image_url: string;
   author: string;
   category: string;
-  views: number;
-  likes: number;
   created_at: string;
 }
 
@@ -27,6 +25,7 @@ const NewsPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
+  const [showMobileFilter, setShowMobileFilter] = useState(false);
 
   const mockArticles: NewsArticle[] = [
     {
@@ -37,8 +36,6 @@ const NewsPage: React.FC = () => {
       image_url: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
       author: 'Tim KKN Universitas Nusa Putra',
       category: 'pendidikan',
-      views: 1250,
-      likes: 89,
       created_at: '2024-01-15T10:00:00Z',
     },
     {
@@ -49,8 +46,6 @@ const NewsPage: React.FC = () => {
       image_url: 'https://images.unsplash.com/photo-1581833971358-2c8b550f87b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
       author: 'Kepala Desa Cikadu',
       category: 'infrastruktur',
-      views: 2100,
-      likes: 156,
       created_at: '2024-01-12T14:30:00Z',
     },
     {
@@ -61,8 +56,6 @@ const NewsPage: React.FC = () => {
       image_url: 'https://images.unsplash.com/photo-1533900298318-6b8da08a523e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
       author: 'Karang Taruna Desa Cikadu',
       category: 'budaya',
-      views: 3200,
-      likes: 245,
       created_at: '2024-01-10T19:00:00Z',
     },
     {
@@ -73,8 +66,6 @@ const NewsPage: React.FC = () => {
       image_url: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
       author: 'Tim Ekonomi KKN',
       category: 'ekonomi',
-      views: 1800,
-      likes: 134,
       created_at: '2024-01-08T11:15:00Z',
     },
     {
@@ -85,8 +76,6 @@ const NewsPage: React.FC = () => {
       image_url: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
       author: 'Dinas Pendidikan Desa',
       category: 'pendidikan',
-      views: 2800,
-      likes: 198,
       created_at: '2024-01-05T16:45:00Z',
     },
     {
@@ -97,8 +86,6 @@ const NewsPage: React.FC = () => {
       image_url: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
       author: 'Tim Lingkungan KKN',
       category: 'lingkungan',
-      views: 1650,
-      likes: 112,
       created_at: '2024-01-03T08:20:00Z',
     },
   ];
@@ -175,36 +162,13 @@ const NewsPage: React.FC = () => {
     });
   };
 
-  const getTimeAgo = (dateString: string) => {
-    const now = new Date();
-    const date = new Date(dateString);
-    const diffInHours = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60));
-    
-    if (diffInHours < 24) return `${diffInHours} jam yang lalu`;
-    const diffInDays = Math.floor(diffInHours / 24);
-    if (diffInDays < 7) return `${diffInDays} hari yang lalu`;
-    const diffInWeeks = Math.floor(diffInDays / 7);
-    return `${diffInWeeks} minggu yang lalu`;
-  };
-
   const handleCardClick = (articleId: string) => {
     navigate(`/news/${articleId}`);
   };
 
-  const handleShare = async (article: NewsArticle, e: React.MouseEvent) => {
-    e.stopPropagation();
-    const url = `${window.location.origin}/news/${article.id}`;
-    
-    if (navigator.share) {
-      await navigator.share({
-        title: article.title,
-        text: article.excerpt,
-        url: url,
-      });
-    } else {
-      await navigator.clipboard.writeText(url);
-      // Add toast notification here
-    }
+  const handleCategorySelect = (categoryValue: string) => {
+    setSelectedCategory(categoryValue);
+    setShowMobileFilter(false);
   };
 
   if (loading) {
@@ -217,7 +181,7 @@ const NewsPage: React.FC = () => {
 
   return (
     <div className="min-h-screen pt-20">
-      {/* Enhanced Hero Section with Background Image & Green Gradient */}
+      {/* Enhanced Hero Section */}
       <section 
         className="py-20 md:py-32 relative overflow-hidden"
         style={{
@@ -283,8 +247,8 @@ const NewsPage: React.FC = () => {
                   />
                 </div>
                 
-                {/* Category Filter */}
-                <div className="flex items-center space-x-3">
+                {/* Desktop Category Filter */}
+                <div className="hidden lg:flex items-center space-x-3">
                   <Filter className="h-5 w-5 text-white" />
                   <select
                     value={selectedCategory}
@@ -298,21 +262,43 @@ const NewsPage: React.FC = () => {
                     ))}
                   </select>
                 </div>
-              </div>
-              
-              {/* Quick Stats */}
-              <div className="flex items-center justify-center mt-4 space-x-6 text-white/80 text-sm">
-                <div className="flex items-center">
-                  <Eye className="w-4 h-4 mr-1" />
-                  <span>{mockArticles.reduce((sum, article) => sum + article.views, 0).toLocaleString()} Total Views</span>
-                </div>
-                <div className="flex items-center">
-                  <Heart className="w-4 h-4 mr-1" />
-                  <span>{mockArticles.reduce((sum, article) => sum + article.likes, 0)} Likes</span>
-                </div>
-                <div className="flex items-center">
-                  <Clock className="w-4 h-4 mr-1" />
-                  <span>Update Harian</span>
+
+                {/* Mobile Category Filter Button */}
+                <div className="lg:hidden">
+                  <button
+                    onClick={() => setShowMobileFilter(!showMobileFilter)}
+                    className="w-full px-4 py-4 rounded-xl bg-white/90 backdrop-blur-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all duration-300 text-base shadow-lg flex items-center justify-between"
+                  >
+                    <div className="flex items-center">
+                      <Filter className="h-5 w-5 mr-2 text-emerald-600" />
+                      <span>{categories.find(c => c.value === selectedCategory)?.label}</span>
+                    </div>
+                    <ChevronDown className={`h-5 w-5 text-emerald-600 transition-transform ${showMobileFilter ? 'rotate-180' : ''}`} />
+                  </button>
+
+                  {/* Mobile Filter Dropdown */}
+                  {showMobileFilter && (
+                    <div className="absolute top-full left-0 right-0 mt-2 bg-white/95 backdrop-blur-md rounded-xl border border-white/30 shadow-xl z-50 overflow-hidden">
+                      {categories.map((category) => (
+                        <button
+                          key={category.value}
+                          onClick={() => handleCategorySelect(category.value)}
+                          className={`w-full px-4 py-3 text-left hover:bg-emerald-50 transition-colors text-gray-800 border-b border-gray-100 last:border-0 ${
+                            selectedCategory === category.value ? 'bg-emerald-50 text-emerald-800 font-semibold' : ''
+                          }`}
+                        >
+                          {category.label} ({category.count})
+                        </button>
+                      ))}
+                      <button
+                        onClick={() => setShowMobileFilter(false)}
+                        className="w-full px-4 py-3 bg-gray-50 text-gray-600 hover:bg-gray-100 transition-colors flex items-center justify-center"
+                      >
+                        <X className="h-4 w-4 mr-2" />
+                        Tutup
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -357,18 +343,9 @@ const NewsPage: React.FC = () => {
                         {filteredArticles[0].category.toUpperCase()}
                       </span>
                     </div>
-                    <div className="absolute bottom-6 left-6 right-6 lg:hidden">
-                      <p className="text-white text-sm mb-2">{getTimeAgo(filteredArticles[0].created_at)}</p>
-                    </div>
                   </div>
                   
                   <div className="lg:col-span-2 p-8 flex flex-col justify-center">
-                    <div className="mb-4">
-                      <span className="text-emerald-600 dark:text-emerald-400 font-semibold text-sm">
-                        {getTimeAgo(filteredArticles[0].created_at)}
-                      </span>
-                    </div>
-                    
                     <h3 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-4 leading-tight group-hover:text-emerald-600 transition-colors duration-300">
                       {filteredArticles[0].title}
                     </h3>
@@ -384,15 +361,9 @@ const NewsPage: React.FC = () => {
                           <span className="font-medium">{filteredArticles[0].author}</span>
                         </div>
                       </div>
-                      <div className="flex items-center space-x-4">
-                        <div className="flex items-center">
-                          <Eye className="h-4 w-4 mr-1 text-blue-500" />
-                          <span>{filteredArticles[0].views.toLocaleString()}</span>
-                        </div>
-                        <div className="flex items-center">
-                          <Heart className="h-4 w-4 mr-1 text-red-500" />
-                          <span>{filteredArticles[0].likes}</span>
-                        </div>
+                      <div className="flex items-center">
+                        <Calendar className="h-4 w-4 mr-1" />
+                        <span>{formatDate(filteredArticles[0].created_at)}</span>
                       </div>
                     </div>
                     
@@ -470,11 +441,6 @@ const NewsPage: React.FC = () => {
                           {article.category.toUpperCase()}
                         </span>
                       </div>
-                      <div className="absolute bottom-4 left-4">
-                        <span className="text-white text-xs font-medium bg-black/50 px-2 py-1 rounded backdrop-blur-sm">
-                          {getTimeAgo(article.created_at)}
-                        </span>
-                      </div>
                     </div>
                     
                     <div className="p-6 flex flex-col h-full">
@@ -497,36 +463,13 @@ const NewsPage: React.FC = () => {
                         </div>
                       </div>
                       
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-4 text-sm text-gray-500">
-                          <div className="flex items-center">
-                            <Eye className="h-4 w-4 mr-1 text-blue-500" />
-                            <span>{article.views.toLocaleString()}</span>
-                          </div>
-                          <div className="flex items-center">
-                            <Heart className="h-4 w-4 mr-1 text-red-500" />
-                            <span>{article.likes}</span>
-                          </div>
-                        </div>
-                        
-                        <div className="flex space-x-2">
-                          <Button 
-                            variant="ghost" 
-                            size="sm"
-                            className="p-2 hover:bg-emerald-100 dark:hover:bg-emerald-900 text-gray-600 dark:text-gray-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition-all duration-200"
-                            onClick={(e) => handleShare(article, e)}
-                          >
-                            <Share2 className="h-4 w-4" />
-                          </Button>
-                          <Button 
-                            variant="outline" 
-                            size="sm"
-                            className="px-4 py-2 text-sm border-emerald-500 text-emerald-600 hover:bg-emerald-600 hover:text-white transition-all duration-200 rounded-lg font-medium"
-                          >
-                            Baca
-                          </Button>
-                        </div>
-                      </div>
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        className="w-full border-emerald-500 text-emerald-600 hover:bg-emerald-600 hover:text-white transition-all duration-200 rounded-lg font-medium"
+                      >
+                        Baca Artikel
+                      </Button>
                     </div>
                   </Card>
                 </motion.div>
@@ -555,7 +498,7 @@ const NewsPage: React.FC = () => {
         </div>
       </section>
 
-      {/* Enhanced Newsletter CTA with Background Image & Green Gradient */}
+      {/* Community Engagement Section */}
       <section 
         className="py-20 md:py-28 relative overflow-hidden"
         style={{
@@ -581,60 +524,84 @@ const NewsPage: React.FC = () => {
             viewport={{ once: true }}
           >
             <div className="inline-flex items-center px-4 py-2 mb-6 rounded-full bg-white/20 backdrop-blur-sm border border-white/30">
-              <Heart className="w-5 h-5 text-white mr-2" />
-              <span className="text-white font-medium">Jadilah Bagian dari Komunitas</span>
+              <BookOpen className="w-5 h-5 text-white mr-2" />
+              <span className="text-white font-medium">Bergabung dengan Komunitas</span>
             </div>
 
             <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
               <span className="bg-gradient-to-r from-white via-emerald-100 to-white bg-clip-text text-transparent">
-                Tetap Terhubung
+                Wujudkan Desa
               </span>
               <br />
-              <span className="text-emerald-100">dengan Kami</span>
+              <span className="text-emerald-100">Digital Bersama</span>
             </h2>
             
             <p className="text-xl md:text-2xl text-emerald-50 mb-10 max-w-3xl mx-auto leading-relaxed font-light">
-              Dapatkan informasi <strong className="text-white">eksklusif</strong> mengenai program KKN, 
-              kegiatan pemberdayaan masyarakat, dan transformasi berkelanjutan 
-              <strong className="text-white"> Desa Cikadu</strong> langsung di email Anda.
+              Jadilah bagian dari <strong className="text-white">transformasi digital</strong> Desa Cikadu. 
+              Mari bersama-sama membangun masa depan yang lebih cerah melalui 
+              <strong className="text-white"> teknologi dan inovasi</strong>.
             </p>
 
-            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 shadow-2xl max-w-2xl mx-auto">
-              <div className="flex flex-col sm:flex-row gap-4">
-                <div className="flex-1">
-                  <input
-                    type="email"
-                    placeholder="Masukkan alamat email Anda..."
-                    className="w-full px-6 py-4 rounded-xl border-0 bg-white/90 backdrop-blur-sm text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-white focus:bg-white transition-all duration-300 text-base shadow-lg"
-                  />
-                </div>
-                <Button
-                  variant="secondary"
-                  size="lg"
-                  className="bg-white text-emerald-600 hover:bg-emerald-50 font-bold py-4 px-8 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl whitespace-nowrap"
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+              {[
+                {
+                  icon: "📱",
+                  title: "Aplikasi Mobile",
+                  description: "Akses informasi desa kapan saja melalui smartphone Anda"
+                },
+                {
+                  icon: "🌐",
+                  title: "Portal Digital",
+                  description: "Platform terpadu untuk layanan dan informasi desa"
+                },
+                {
+                  icon: "👥",
+                  title: "Komunitas Aktif",
+                  description: "Bergabung dengan warga lain dalam membangun desa"
+                }
+              ].map((feature, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: index * 0.2 }}
+                  viewport={{ once: true }}
+                  className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20"
                 >
-                  Berlangganan Sekarang
-                </Button>
-              </div>
-              
-              <div className="flex items-center justify-center mt-4 space-x-6 text-white/70 text-sm">
-                <div className="flex items-center">
-                  <span className="w-2 h-2 bg-emerald-300 rounded-full mr-2"></span>
-                  <span>Gratis Selamanya</span>
-                </div>
-                <div className="flex items-center">
-                  <span className="w-2 h-2 bg-emerald-300 rounded-full mr-2"></span>
-                  <span>Bisa Berhenti Kapan Saja</span>
-                </div>
-                <div className="flex items-center">
-                  <span className="w-2 h-2 bg-emerald-300 rounded-full mr-2"></span>
-                  <span>Tanpa Spam</span>
-                </div>
-              </div>
+                  <div className="text-4xl mb-4">{feature.icon}</div>
+                  <h3 className="text-xl font-bold text-white mb-3">{feature.title}</h3>
+                  <p className="text-emerald-100 leading-relaxed">{feature.description}</p>
+                </motion.div>
+              ))}
             </div>
 
-            <div className="mt-8 text-emerald-100 text-sm">
-              <p>🔒 Data Anda aman dan tidak akan dibagikan kepada pihak ketiga</p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <Button
+                className="bg-white text-emerald-600 hover:bg-emerald-50 font-bold py-4 px-8 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl"
+              >
+                Pelajari Lebih Lanjut
+              </Button>
+              <Button
+                variant="outline"
+                className="border-2 border-white text-white hover:bg-white hover:text-emerald-600 font-bold py-4 px-8 rounded-xl transition-all duration-300"
+              >
+                Hubungi Kami
+              </Button>
+            </div>
+
+            <div className="mt-8 flex items-center justify-center space-x-8 text-emerald-100 text-sm">
+              <div className="flex items-center">
+                <span className="w-2 h-2 bg-emerald-300 rounded-full mr-2"></span>
+                <span>Gratis untuk Semua Warga</span>
+              </div>
+              <div className="flex items-center">
+                <span className="w-2 h-2 bg-emerald-300 rounded-full mr-2"></span>
+                <span>Dukungan 24/7</span>
+              </div>
+              <div className="flex items-center">
+                <span className="w-2 h-2 bg-emerald-300 rounded-full mr-2"></span>
+                <span>Mudah Digunakan</span>
+              </div>
             </div>
           </motion.div>
         </div>
