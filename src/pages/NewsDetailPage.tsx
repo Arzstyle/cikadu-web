@@ -469,8 +469,8 @@ const NewsDetailPage: React.FC = () => {
             </h2>
             
             <p className="text-xl md:text-2xl text-emerald-50 mb-12 max-w-3xl mx-auto leading-relaxed font-light">
-              Mari bergabung dan berpartisipasi dalam <strong className="text-white">transformasi berkelanjutan</strong> 
-                 Desa Cikadu menuju <strong className="text-white">masyarakat digital yang maju</strong> dan sejahtera.
+              Mari bergabung dan berpartisipasi dalam <strong className="text-white">transformasi berkelanjutan </strong> 
+               Desa Cikadu menuju <strong className="text-white">masyarakat digital yang maju</strong> dan sejahtera.
             </p>
           </motion.div>
 
