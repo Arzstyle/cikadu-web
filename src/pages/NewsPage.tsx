@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { Calendar, User, Eye, Heart, Share2, Search, Filter, ArrowRight } from 'lucide-react';
+import { Calendar, User, Eye, Heart, Share2, Search, Filter, ArrowRight, TrendingUp, Clock } from 'lucide-react';
 import Card from '../components/UI/Card';
 import Button from '../components/UI/Button';
 import LoadingSpinner from '../components/UI/LoadingSpinner';
@@ -28,7 +28,6 @@ const NewsPage: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
 
-  // Professional KKN-focused mock data
   const mockArticles: NewsArticle[] = [
     {
       id: '1',
@@ -105,12 +104,12 @@ const NewsPage: React.FC = () => {
   ];
 
   const categories = [
-    { value: 'all', label: 'Semua Kategori' },
-    { value: 'pendidikan', label: 'Pendidikan' },
-    { value: 'infrastruktur', label: 'Infrastruktur' },
-    { value: 'budaya', label: 'Budaya' },
-    { value: 'ekonomi', label: 'Ekonomi' },
-    { value: 'lingkungan', label: 'Lingkungan' },
+    { value: 'all', label: 'Semua Kategori', count: mockArticles.length },
+    { value: 'pendidikan', label: 'Pendidikan', count: mockArticles.filter(a => a.category === 'pendidikan').length },
+    { value: 'infrastruktur', label: 'Infrastruktur', count: mockArticles.filter(a => a.category === 'infrastruktur').length },
+    { value: 'budaya', label: 'Budaya', count: mockArticles.filter(a => a.category === 'budaya').length },
+    { value: 'ekonomi', label: 'Ekonomi', count: mockArticles.filter(a => a.category === 'ekonomi').length },
+    { value: 'lingkungan', label: 'Lingkungan', count: mockArticles.filter(a => a.category === 'lingkungan').length },
   ];
 
   useEffect(() => {
@@ -123,20 +122,17 @@ const NewsPage: React.FC = () => {
 
   const fetchNews = async () => {
     try {
-      // Try to fetch from Supabase first
       const { data, error } = await supabase
         .from('news_articles')
         .select('*')
         .order('created_at', { ascending: false });
 
       if (error) {
-        console.log('Using mock data as Supabase is not configured');
         setArticles(mockArticles);
       } else {
         setArticles(data || mockArticles);
       }
     } catch (error) {
-      console.log('Using mock data:', error);
       setArticles(mockArticles);
     } finally {
       setLoading(false);
@@ -162,13 +158,13 @@ const NewsPage: React.FC = () => {
 
   const getCategoryColor = (category: string) => {
     const colors = {
-      pendidikan: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
-      infrastruktur: 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200',
-      budaya: 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200',
-      ekonomi: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
-      lingkungan: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200',
+      pendidikan: 'bg-blue-500/20 text-blue-800 border border-blue-500/30 dark:bg-blue-900/30 dark:text-blue-200 dark:border-blue-500/50',
+      infrastruktur: 'bg-gray-500/20 text-gray-800 border border-gray-500/30 dark:bg-gray-900/30 dark:text-gray-200 dark:border-gray-500/50',
+      budaya: 'bg-purple-500/20 text-purple-800 border border-purple-500/30 dark:bg-purple-900/30 dark:text-purple-200 dark:border-purple-500/50',
+      ekonomi: 'bg-green-500/20 text-green-800 border border-green-500/30 dark:bg-green-900/30 dark:text-green-200 dark:border-green-500/50',
+      lingkungan: 'bg-emerald-500/20 text-emerald-800 border border-emerald-500/30 dark:bg-emerald-900/30 dark:text-emerald-200 dark:border-emerald-500/50',
     };
-    return colors[category as keyof typeof colors] || 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200';
+    return colors[category as keyof typeof colors] || 'bg-gray-500/20 text-gray-800 border border-gray-500/30 dark:bg-gray-900/30 dark:text-gray-200 dark:border-gray-500/50';
   };
 
   const formatDate = (dateString: string) => {
@@ -179,28 +175,41 @@ const NewsPage: React.FC = () => {
     });
   };
 
+  const getTimeAgo = (dateString: string) => {
+    const now = new Date();
+    const date = new Date(dateString);
+    const diffInHours = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60));
+    
+    if (diffInHours < 24) return `${diffInHours} jam yang lalu`;
+    const diffInDays = Math.floor(diffInHours / 24);
+    if (diffInDays < 7) return `${diffInDays} hari yang lalu`;
+    const diffInWeeks = Math.floor(diffInDays / 7);
+    return `${diffInWeeks} minggu yang lalu`;
+  };
+
   const handleCardClick = (articleId: string) => {
-    // Navigate to individual article page
     navigate(`/news/${articleId}`);
   };
 
-  const handleShare = (article: NewsArticle, e: React.MouseEvent) => {
+  const handleShare = async (article: NewsArticle, e: React.MouseEvent) => {
     e.stopPropagation();
+    const url = `${window.location.origin}/news/${article.id}`;
+    
     if (navigator.share) {
-      navigator.share({
+      await navigator.share({
         title: article.title,
         text: article.excerpt,
-        url: `${window.location.origin}/news/${article.id}`,
+        url: url,
       });
     } else {
-      // Fallback: copy to clipboard
-      navigator.clipboard.writeText(`${window.location.origin}/news/${article.id}`);
+      await navigator.clipboard.writeText(url);
+      // Add toast notification here
     }
   };
 
   if (loading) {
     return (
-      <div className="min-h-screen pt-20 flex items-center justify-center">
+      <div className="min-h-screen pt-20 flex items-center justify-center bg-gray-50 dark:bg-gray-900">
         <LoadingSpinner size="lg" />
       </div>
     );
@@ -208,131 +217,192 @@ const NewsPage: React.FC = () => {
 
   return (
     <div className="min-h-screen pt-20">
-      {/* Hero Section with News Background */}
+      {/* Enhanced Hero Section with Background Image & Green Gradient */}
       <section 
-        className="py-16 md:py-20 relative overflow-hidden"
+        className="py-20 md:py-32 relative overflow-hidden"
         style={{
-          backgroundImage: `linear-gradient(135deg, rgba(17, 24, 39, 0.8) 0%, rgba(31, 41, 55, 0.7) 100%), url('https://images.unsplash.com/photo-1504711434969-e33886168f5c?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80')`,
+          backgroundImage: `linear-gradient(135deg, rgba(16, 185, 129, 0.9) 0%, rgba(5, 150, 105, 0.8) 50%, rgba(4, 120, 87, 0.9) 100%), url('https://images.unsplash.com/photo-1504711434969-e33886168f5c?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80')`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat'
+          backgroundRepeat: 'no-repeat',
+          backgroundAttachment: 'fixed'
         }}
       >
+        {/* Animated Background Pattern */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-10 left-10 w-72 h-72 bg-white rounded-full mix-blend-overlay filter blur-xl animate-pulse"></div>
+          <div className="absolute top-40 right-20 w-96 h-96 bg-emerald-300 rounded-full mix-blend-overlay filter blur-2xl animate-pulse delay-1000"></div>
+          <div className="absolute bottom-20 left-1/3 w-80 h-80 bg-green-200 rounded-full mix-blend-overlay filter blur-xl animate-pulse delay-2000"></div>
+        </div>
+
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-center mb-8 md:mb-12"
+            transition={{ duration: 1, ease: "easeOut" }}
+            className="text-center mb-12"
           >
-            <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white mb-4 md:mb-6">
-              Berita & Kegiatan KKN
+            <div className="inline-flex items-center px-4 py-2 mb-6 rounded-full bg-white/20 backdrop-blur-sm border border-white/30">
+              <TrendingUp className="w-5 h-5 text-white mr-2" />
+              <span className="text-white font-medium">Berita Terpercaya & Terkini</span>
+            </div>
+            
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
+              <span className="bg-gradient-to-r from-white via-emerald-100 to-white bg-clip-text text-transparent">
+                Portal Berita
+              </span>
+              <br />
+              <span className="text-emerald-100">Desa Cikadu</span>
             </h1>
-            <p className="text-lg md:text-xl text-gray-200 max-w-3xl mx-auto leading-relaxed">
-              Informasi terkini mengenai program Kuliah Kerja Nyata, kegiatan pemberdayaan masyarakat, 
-              dan perkembangan pembangunan Desa Cikadu.
+            
+            <p className="text-xl md:text-2xl text-emerald-50 max-w-4xl mx-auto leading-relaxed font-light">
+              Jendela informasi terdepan untuk program <strong className="text-white">Kuliah Kerja Nyata</strong>, 
+              kegiatan pemberdayaan masyarakat, dan transformasi berkelanjutan menuju 
+              <strong className="text-white"> Desa Cikadu yang Maju dan Sejahtera</strong>.
             </p>
           </motion.div>
 
-          {/* Search and Filter */}
-          <div className="max-w-4xl mx-auto">
-            <div className="flex flex-col md:flex-row gap-3 md:gap-4 mb-8">
-              <div className="flex-1 relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                <input
-                  type="text"
-                  placeholder="Cari berita dan kegiatan..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 md:py-4 rounded-lg border border-gray-300 dark:border-gray-600 bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm md:text-base"
-                />
+          {/* Enhanced Search and Filter */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+            className="max-w-5xl mx-auto"
+          >
+            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 shadow-2xl">
+              <div className="flex flex-col lg:flex-row gap-4">
+                {/* Search Input */}
+                <div className="flex-1 relative">
+                  <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-emerald-600" />
+                  <input
+                    type="text"
+                    placeholder="Temukan berita dan kegiatan yang menginspirasi..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="w-full pl-12 pr-4 py-4 rounded-xl border-0 bg-white/90 backdrop-blur-sm text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition-all duration-300 text-base shadow-lg"
+                  />
+                </div>
+                
+                {/* Category Filter */}
+                <div className="flex items-center space-x-3">
+                  <Filter className="h-5 w-5 text-white" />
+                  <select
+                    value={selectedCategory}
+                    onChange={(e) => setSelectedCategory(e.target.value)}
+                    className="px-4 py-4 rounded-xl border-0 bg-white/90 backdrop-blur-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition-all duration-300 text-base min-w-[180px] shadow-lg cursor-pointer"
+                  >
+                    {categories.map((category) => (
+                      <option key={category.value} value={category.value}>
+                        {category.label} ({category.count})
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </div>
-              <div className="flex items-center space-x-2">
-                <Filter className="h-5 w-5 text-gray-300" />
-                <select
-                  value={selectedCategory}
-                  onChange={(e) => setSelectedCategory(e.target.value)}
-                  className="px-3 md:px-4 py-3 md:py-4 rounded-lg border border-gray-300 dark:border-gray-600 bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm md:text-base min-w-[140px]"
-                >
-                  {categories.map((category) => (
-                    <option key={category.value} value={category.value}>
-                      {category.label}
-                    </option>
-                  ))}
-                </select>
+              
+              {/* Quick Stats */}
+              <div className="flex items-center justify-center mt-4 space-x-6 text-white/80 text-sm">
+                <div className="flex items-center">
+                  <Eye className="w-4 h-4 mr-1" />
+                  <span>{mockArticles.reduce((sum, article) => sum + article.views, 0).toLocaleString()} Total Views</span>
+                </div>
+                <div className="flex items-center">
+                  <Heart className="w-4 h-4 mr-1" />
+                  <span>{mockArticles.reduce((sum, article) => sum + article.likes, 0)} Likes</span>
+                </div>
+                <div className="flex items-center">
+                  <Clock className="w-4 h-4 mr-1" />
+                  <span>Update Harian</span>
+                </div>
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </section>
 
-      {/* Featured Article */}
+      {/* Enhanced Featured Article */}
       {filteredArticles.length > 0 && (
-        <section className="py-8 md:py-12 bg-white dark:bg-gray-900">
+        <section className="py-16 bg-white dark:bg-gray-900 relative">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
               viewport={{ once: true }}
-              className="mb-8 md:mb-12"
+              className="mb-12"
             >
-              <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-6 md:mb-8 text-center">
-                Berita Utama
-              </h2>
-              <Card 
-                className="overflow-hidden cursor-pointer hover:shadow-2xl transition-all duration-300"
+              <div className="text-center mb-12">
+                <div className="inline-flex items-center px-4 py-2 mb-4 rounded-full bg-emerald-100 dark:bg-emerald-900 text-emerald-800 dark:text-emerald-200">
+                  <TrendingUp className="w-4 h-4 mr-2" />
+                  <span className="font-semibold">HEADLINE UTAMA</span>
+                </div>
+                <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">
+                  Sorotan Utama Hari Ini
+                </h2>
+              </div>
+
+              <Card className="overflow-hidden hover:shadow-2xl transition-all duration-500 cursor-pointer group bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 border-2 border-emerald-100 dark:border-emerald-800"
                 onClick={() => handleCardClick(filteredArticles[0].id)}
               >
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
-                  <div className="relative h-64 md:h-80 lg:h-auto">
+                <div className="grid grid-cols-1 lg:grid-cols-5 gap-0">
+                  <div className="lg:col-span-3 relative overflow-hidden">
                     <img
                       src={filteredArticles[0].image_url}
                       alt={filteredArticles[0].title}
-                      className="w-full h-full object-cover"
+                      className="w-full h-72 lg:h-96 object-cover group-hover:scale-110 transition-transform duration-700"
                     />
-                    <div className="absolute top-4 left-4">
-                      <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getCategoryColor(filteredArticles[0].category)}`}>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+                    <div className="absolute top-6 left-6">
+                      <span className={`px-4 py-2 rounded-full text-sm font-bold backdrop-blur-sm ${getCategoryColor(filteredArticles[0].category)}`}>
                         {filteredArticles[0].category.toUpperCase()}
                       </span>
                     </div>
+                    <div className="absolute bottom-6 left-6 right-6 lg:hidden">
+                      <p className="text-white text-sm mb-2">{getTimeAgo(filteredArticles[0].created_at)}</p>
+                    </div>
                   </div>
-                  <div className="p-6 md:p-8 flex flex-col justify-center">
-                    <h3 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white mb-4 leading-tight">
+                  
+                  <div className="lg:col-span-2 p-8 flex flex-col justify-center">
+                    <div className="mb-4">
+                      <span className="text-emerald-600 dark:text-emerald-400 font-semibold text-sm">
+                        {getTimeAgo(filteredArticles[0].created_at)}
+                      </span>
+                    </div>
+                    
+                    <h3 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-4 leading-tight group-hover:text-emerald-600 transition-colors duration-300">
                       {filteredArticles[0].title}
                     </h3>
-                    <p className="text-gray-600 dark:text-gray-300 mb-6 text-base md:text-lg leading-relaxed">
+                    
+                    <p className="text-gray-600 dark:text-gray-300 mb-6 text-lg leading-relaxed line-clamp-3">
                       {filteredArticles[0].excerpt}
                     </p>
-                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between text-sm text-gray-500 mb-6 gap-3 sm:gap-0">
-                      <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
+                    
+                    <div className="flex items-center justify-between text-sm text-gray-500 mb-6">
+                      <div className="flex items-center space-x-4">
                         <div className="flex items-center">
-                          <User className="h-4 w-4 mr-1" />
-                          <span className="text-xs md:text-sm">{filteredArticles[0].author}</span>
-                        </div>
-                        <div className="flex items-center">
-                          <Calendar className="h-4 w-4 mr-1" />
-                          <span className="text-xs md:text-sm">{formatDate(filteredArticles[0].created_at)}</span>
+                          <User className="h-4 w-4 mr-2" />
+                          <span className="font-medium">{filteredArticles[0].author}</span>
                         </div>
                       </div>
-                      <div className="flex items-center space-x-3">
+                      <div className="flex items-center space-x-4">
                         <div className="flex items-center">
-                          <Eye className="h-4 w-4 mr-1" />
-                          <span className="text-xs md:text-sm">{filteredArticles[0].views}</span>
+                          <Eye className="h-4 w-4 mr-1 text-blue-500" />
+                          <span>{filteredArticles[0].views.toLocaleString()}</span>
                         </div>
                         <div className="flex items-center">
                           <Heart className="h-4 w-4 mr-1 text-red-500" />
-                          <span className="text-xs md:text-sm">{filteredArticles[0].likes}</span>
+                          <span>{filteredArticles[0].likes}</span>
                         </div>
                       </div>
                     </div>
+                    
                     <Button 
                       variant="primary" 
                       size="lg" 
-                      className="w-full sm:w-auto bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200"
+                      className="w-full bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl"
                       icon={ArrowRight}
                     >
-                      Baca Selengkapnya
+                      Baca Artikel Lengkap
                     </Button>
                   </div>
                 </div>
@@ -342,32 +412,40 @@ const NewsPage: React.FC = () => {
         </section>
       )}
 
-      {/* News Grid */}
-      <section className="py-12 md:py-20 bg-gray-50 dark:bg-gray-800">
+      {/* Enhanced News Grid */}
+      <section className="py-16 bg-gray-50 dark:bg-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
-            className="text-center mb-8 md:mb-12"
+            className="text-center mb-12"
           >
-            <h2 className="text-2xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
               Berita & Kegiatan Terbaru
             </h2>
-            <p className="text-base md:text-lg text-gray-600 dark:text-gray-300">
-              Ikuti perkembangan terbaru program KKN dan kegiatan masyarakat Desa Cikadu
+            <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+              Pantau terus perkembangan program KKN dan transformasi berkelanjutan masyarakat Desa Cikadu
             </p>
           </motion.div>
 
           {filteredArticles.length === 0 ? (
-            <div className="text-center py-12">
-              <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300">
-                Tidak ada berita yang sesuai dengan pencarian Anda.
-              </p>
+            <div className="text-center py-16">
+              <div className="max-w-md mx-auto">
+                <div className="w-24 h-24 mx-auto mb-6 bg-gray-200 dark:bg-gray-700 rounded-full flex items-center justify-center">
+                  <Search className="w-12 h-12 text-gray-400" />
+                </div>
+                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+                  Tidak Ada Hasil
+                </h3>
+                <p className="text-gray-600 dark:text-gray-300">
+                  Tidak ada berita yang sesuai dengan pencarian Anda. Coba kata kunci lain.
+                </p>
+              </div>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {filteredArticles.slice(1).map((article, index) => (
                 <motion.div
                   key={article.id}
@@ -377,54 +455,65 @@ const NewsPage: React.FC = () => {
                   viewport={{ once: true }}
                 >
                   <Card 
-                    className="overflow-hidden h-full hover:shadow-2xl transition-all duration-300 cursor-pointer"
+                    className="overflow-hidden h-full hover:shadow-2xl transition-all duration-500 cursor-pointer group bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:border-emerald-300 dark:hover:border-emerald-600"
                     onClick={() => handleCardClick(article.id)}
                   >
                     <div className="relative">
                       <img
                         src={article.image_url}
                         alt={article.title}
-                        className="w-full h-48 md:h-56 object-cover hover:scale-105 transition-transform duration-300"
+                        className="w-full h-56 object-cover group-hover:scale-105 transition-transform duration-500"
                       />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent group-hover:from-black/60 transition-all duration-300"></div>
                       <div className="absolute top-4 right-4">
-                        <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getCategoryColor(article.category)}`}>
+                        <span className={`px-3 py-1 rounded-full text-xs font-bold backdrop-blur-sm ${getCategoryColor(article.category)}`}>
                           {article.category.toUpperCase()}
                         </span>
                       </div>
+                      <div className="absolute bottom-4 left-4">
+                        <span className="text-white text-xs font-medium bg-black/50 px-2 py-1 rounded backdrop-blur-sm">
+                          {getTimeAgo(article.created_at)}
+                        </span>
+                      </div>
                     </div>
-                    <div className="p-4 md:p-6 flex flex-col h-full">
-                      <h3 className="text-lg md:text-xl font-bold text-gray-900 dark:text-white mb-3 line-clamp-2 leading-tight">
+                    
+                    <div className="p-6 flex flex-col h-full">
+                      <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3 line-clamp-2 leading-tight group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors duration-300">
                         {article.title}
                       </h3>
-                      <p className="text-sm md:text-base text-gray-600 dark:text-gray-300 mb-4 line-clamp-3 flex-grow leading-relaxed">
+                      
+                      <p className="text-gray-600 dark:text-gray-300 mb-4 line-clamp-3 flex-grow leading-relaxed">
                         {article.excerpt}
                       </p>
-                      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between text-xs md:text-sm text-gray-500 mb-4 gap-2 sm:gap-0">
+                      
+                      <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
                         <div className="flex items-center">
                           <User className="h-4 w-4 mr-1" />
-                          <span className="truncate max-w-[150px]">{article.author}</span>
+                          <span className="truncate max-w-[120px] font-medium">{article.author}</span>
                         </div>
                         <div className="flex items-center">
                           <Calendar className="h-4 w-4 mr-1" />
                           <span>{formatDate(article.created_at)}</span>
                         </div>
                       </div>
+                      
                       <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-3 text-xs md:text-sm text-gray-500">
+                        <div className="flex items-center space-x-4 text-sm text-gray-500">
                           <div className="flex items-center">
-                            <Eye className="h-4 w-4 mr-1" />
-                            <span>{article.views}</span>
+                            <Eye className="h-4 w-4 mr-1 text-blue-500" />
+                            <span>{article.views.toLocaleString()}</span>
                           </div>
                           <div className="flex items-center">
                             <Heart className="h-4 w-4 mr-1 text-red-500" />
                             <span>{article.likes}</span>
                           </div>
                         </div>
+                        
                         <div className="flex space-x-2">
                           <Button 
                             variant="ghost" 
                             size="sm"
-                            className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300"
+                            className="p-2 hover:bg-emerald-100 dark:hover:bg-emerald-900 text-gray-600 dark:text-gray-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition-all duration-200"
                             onClick={(e) => handleShare(article, e)}
                           >
                             <Share2 className="h-4 w-4" />
@@ -432,7 +521,7 @@ const NewsPage: React.FC = () => {
                           <Button 
                             variant="outline" 
                             size="sm"
-                            className="px-3 py-1 text-xs md:text-sm border-primary-600 text-primary-600 hover:bg-primary-600 hover:text-white transition-all duration-200"
+                            className="px-4 py-2 text-sm border-emerald-500 text-emerald-600 hover:bg-emerald-600 hover:text-white transition-all duration-200 rounded-lg font-medium"
                           >
                             Baca
                           </Button>
@@ -444,38 +533,108 @@ const NewsPage: React.FC = () => {
               ))}
             </div>
           )}
+
+          {/* Load More Button */}
+          {filteredArticles.length > 6 && (
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+              className="text-center mt-12"
+            >
+              <Button
+                variant="outline"
+                size="lg"
+                className="px-8 py-4 border-emerald-500 text-emerald-600 hover:bg-emerald-600 hover:text-white transition-all duration-300 rounded-xl font-semibold"
+              >
+                Muat Lebih Banyak Berita
+              </Button>
+            </motion.div>
+          )}
         </div>
       </section>
 
-      {/* Newsletter CTA */}
-      <section className="py-12 md:py-20 bg-primary-600 dark:bg-primary-800">
-        <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
+      {/* Enhanced Newsletter CTA with Background Image & Green Gradient */}
+      <section 
+        className="py-20 md:py-28 relative overflow-hidden"
+        style={{
+          backgroundImage: `linear-gradient(135deg, rgba(16, 185, 129, 0.95) 0%, rgba(5, 150, 105, 0.9) 50%, rgba(4, 120, 87, 0.95) 100%), url('https://images.unsplash.com/photo-1557804506-669a67965ba0?ixlib=rb-4.0.3&auto=format&fit=crop&w=2074&q=80')`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+          backgroundAttachment: 'fixed'
+        }}
+      >
+        {/* Animated Background Elements */}
+        <div className="absolute inset-0 opacity-20">
+          <div className="absolute top-20 left-20 w-64 h-64 bg-white rounded-full mix-blend-overlay filter blur-xl animate-pulse"></div>
+          <div className="absolute bottom-20 right-20 w-80 h-80 bg-emerald-300 rounded-full mix-blend-overlay filter blur-2xl animate-pulse delay-1000"></div>
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-green-200 rounded-full mix-blend-overlay filter blur-3xl animate-pulse delay-2000"></div>
+        </div>
+
+        <div className="max-w-5xl mx-auto text-center px-4 sm:px-6 lg:px-8 relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold text-white mb-4 md:mb-6">
-              Tetap Terhubung dengan Kami
+            <div className="inline-flex items-center px-4 py-2 mb-6 rounded-full bg-white/20 backdrop-blur-sm border border-white/30">
+              <Heart className="w-5 h-5 text-white mr-2" />
+              <span className="text-white font-medium">Jadilah Bagian dari Komunitas</span>
+            </div>
+
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
+              <span className="bg-gradient-to-r from-white via-emerald-100 to-white bg-clip-text text-transparent">
+                Tetap Terhubung
+              </span>
+              <br />
+              <span className="text-emerald-100">dengan Kami</span>
             </h2>
-            <p className="text-base md:text-xl text-primary-100 mb-6 md:mb-8 max-w-2xl mx-auto leading-relaxed">
-              Dapatkan informasi terbaru mengenai program KKN dan kegiatan pemberdayaan masyarakat 
-              Desa Cikadu langsung di email Anda.
+            
+            <p className="text-xl md:text-2xl text-emerald-50 mb-10 max-w-3xl mx-auto leading-relaxed font-light">
+              Dapatkan informasi <strong className="text-white">eksklusif</strong> mengenai program KKN, 
+              kegiatan pemberdayaan masyarakat, dan transformasi berkelanjutan 
+              <strong className="text-white"> Desa Cikadu</strong> langsung di email Anda.
             </p>
-            <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center max-w-md mx-auto">
-              <input
-                type="email"
-                placeholder="Masukkan email Anda"
-                className="flex-1 px-4 py-3 md:py-4 rounded-lg border-0 focus:outline-none focus:ring-2 focus:ring-white text-sm md:text-base"
-              />
-              <Button
-                variant="secondary"
-                size="lg"
-                className="bg-white text-primary-600 hover:bg-gray-100 font-semibold py-3 px-6 rounded-lg transition-all duration-200 whitespace-nowrap text-sm md:text-base"
-              >
-                Berlangganan
-              </Button>
+
+            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 shadow-2xl max-w-2xl mx-auto">
+              <div className="flex flex-col sm:flex-row gap-4">
+                <div className="flex-1">
+                  <input
+                    type="email"
+                    placeholder="Masukkan alamat email Anda..."
+                    className="w-full px-6 py-4 rounded-xl border-0 bg-white/90 backdrop-blur-sm text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-white focus:bg-white transition-all duration-300 text-base shadow-lg"
+                  />
+                </div>
+                <Button
+                  variant="secondary"
+                  size="lg"
+                  className="bg-white text-emerald-600 hover:bg-emerald-50 font-bold py-4 px-8 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl whitespace-nowrap"
+                >
+                  Berlangganan Sekarang
+                </Button>
+              </div>
+              
+              <div className="flex items-center justify-center mt-4 space-x-6 text-white/70 text-sm">
+                <div className="flex items-center">
+                  <span className="w-2 h-2 bg-emerald-300 rounded-full mr-2"></span>
+                  <span>Gratis Selamanya</span>
+                </div>
+                <div className="flex items-center">
+                  <span className="w-2 h-2 bg-emerald-300 rounded-full mr-2"></span>
+                  <span>Bisa Berhenti Kapan Saja</span>
+                </div>
+                <div className="flex items-center">
+                  <span className="w-2 h-2 bg-emerald-300 rounded-full mr-2"></span>
+                  <span>Tanpa Spam</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-8 text-emerald-100 text-sm">
+              <p>🔒 Data Anda aman dan tidak akan dibagikan kepada pihak ketiga</p>
             </div>
           </motion.div>
         </div>
