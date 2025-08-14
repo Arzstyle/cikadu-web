@@ -149,7 +149,7 @@ const NewsPage: React.FC = () => {
       infrastruktur: 'bg-gray-100 text-gray-900 border border-gray-300 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-600',
       budaya: 'bg-purple-100 text-purple-900 border border-purple-300 dark:bg-purple-800 dark:text-purple-100 dark:border-purple-600',
       ekonomi: 'bg-yellow-100 text-yellow-900 border border-yellow-300 dark:bg-yellow-800 dark:text-yellow-100 dark:border-yellow-600',
-      lingkungan: 'bg-emerald-500/20 text-emerald-800 border border-emerald-500/30 dark:bg-emerald-900/30 dark:text-emerald-200 dark:border-emerald-500/50',
+      lingkungan: 'bg-emerald-100 text-emerald-900 border border-emerald-300 dark:bg-emerald-800 dark:text-emerald-100 dark:border-emerald-600',
     };
     return colors[category as keyof typeof colors] || 'bg-gray-500/20 text-gray-800 border border-gray-500/30 dark:bg-gray-900/30 dark:text-gray-200 dark:border-gray-500/50';
   };
