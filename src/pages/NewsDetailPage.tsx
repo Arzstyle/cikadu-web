@@ -119,11 +119,11 @@ const NewsDetailPage: React.FC = () => {
 
   const getCategoryColor = (category: string) => {
     const colors = {
-      pendidikan: 'bg-blue-100 text-blue-900 border border-blue-300 dark:bg-blue-800 dark:text-blue-100 dark:border-blue-600',
-      infrastruktur: 'bg-gray-100 text-gray-900 border border-gray-300 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-600',
-      budaya: 'bg-purple-100 text-purple-900 border border-purple-300 dark:bg-purple-800 dark:text-purple-100 dark:border-purple-600',
-      ekonomi: 'bg-yellow-100 text-yellow-900 border border-yellow-300 dark:bg-yellow-800 dark:text-yellow-100 dark:border-yellow-600',
-      lingkungan: 'bg-emerald-100 text-emerald-900 border border-emerald-300 dark:bg-emerald-800 dark:text-emerald-100 dark:border-emerald-600',
+      pendidikan: 'bg-blue-500/20 text-blue-800 border border-blue-500/30 dark:bg-blue-900/30 dark:text-blue-200 dark:border-blue-500/50',
+      infrastruktur: 'bg-gray-500/20 text-gray-800 border border-gray-500/30 dark:bg-gray-900/30 dark:text-gray-200 dark:border-gray-500/50',
+      budaya: 'bg-purple-500/20 text-purple-800 border border-purple-500/30 dark:bg-purple-900/30 dark:text-purple-200 dark:border-purple-500/50',
+      ekonomi: 'bg-green-500/20 text-green-800 border border-green-500/30 dark:bg-green-900/30 dark:text-green-200 dark:border-green-500/50',
+      lingkungan: 'bg-emerald-500/20 text-emerald-800 border border-emerald-500/30 dark:bg-emerald-900/30 dark:text-emerald-200 dark:border-emerald-500/50',
     };
     return colors[category as keyof typeof colors] || 'bg-gray-500/20 text-gray-800 border border-gray-500/30 dark:bg-gray-900/30 dark:text-gray-200 dark:border-gray-500/50';
   };
@@ -469,8 +469,8 @@ const NewsDetailPage: React.FC = () => {
             </h2>
             
             <p className="text-xl md:text-2xl text-emerald-50 mb-12 max-w-3xl mx-auto leading-relaxed font-light">
-              Mari bergabung dan berpartisipasi dalam <strong className="text-white">transformasi berkelanjutan </strong> 
-               Desa Cikadu menuju <strong className="text-white">masyarakat digital yang maju</strong> dan sejahtera.
+              Mari bergabung dan berpartisipasi dalam <strong className="text-white">transformasi berkelanjutan</strong> 
+              Desa Cikadu menuju <strong className="text-white">masyarakat digital yang maju</strong> dan sejahtera.
             </p>
           </motion.div>
 
@@ -617,14 +617,14 @@ const NewsDetailPage: React.FC = () => {
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <Button
                 onClick={() => navigate('/news')}
-                className="group relative px-6 sm:px-8 py-3 sm:py-4 bg-white text-emerald-700 hover:bg-emerald-50 shadow-2xl hover:shadow-emerald-200/50 font-semibold rounded-xl transform transition-all duration-300 whitespace-nowrap text-base sm:text-lg overflow-hidden"
+                className="bg-white text-emerald-600 hover:bg-emerald-50 font-bold py-4 px-8 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl"
               >
                 Lihat Berita Lainnya
               </Button>
               <Button
                 onClick={() => navigate('/')}
                 variant="outline"
-                className="absolute inset-0 bg-gradient-to-r from-white to-emerald-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl"
+                className="border-2 border-white text-white hover:bg-white hover:text-emerald-600 font-bold py-4 px-8 rounded-xl transition-all duration-300"
               >
                 Kembali ke Beranda
               </Button>
