@@ -615,26 +615,6 @@ const NewsDetailPage: React.FC = () => {
   className="text-center mt-12"
 >
   <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-    {/* Jika elemen kiri adalah input pencarian */}
-    <div className="w-full sm:w-[360px]">
-      <input
-        type="search"
-        placeholder="Cari berita, program, atau topik..."
-        onKeyDown={(e) => {
-          if (e.key === "Enter") {
-            // handle search
-            navigate('/news'); // contoh behaviour
-          }
-        }}
-        className={
-          "w-full py-3 px-4 rounded-xl placeholder-emerald-200 " +
-          "bg-emerald-800/30 text-white border border-emerald-600 " +
-          "focus:outline-none focus:ring-4 focus:ring-emerald-700/40 " +
-          "transition-colors duration-200"
-        }
-        aria-label="Cari berita"
-      />
-    </div>
 
     {/* Tombol utama (CTA) */}
     <Button
